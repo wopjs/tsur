@@ -1,0 +1,45 @@
+{
+  "name": "tsur",
+  "private": true,
+  "version": "0.0.1",
+  "description": "TypeScript goodies inspired by Rust.",
+  "repository": "crimx/tsur",
+  "main": "./index.js",
+  "module": "./index.mjs",
+  "types": "./index.d.ts",
+  "sideEffects": [
+    "./patches/*"
+  ],
+  "scripts": {
+    "prepublishOnly": "pnpm run build && echo 'Run the npm publish command inside `dist`.' && exit 1",
+    "build": "rimraf dist && tsc && node ./scripts/package.js",
+    "lint": "eslint --ext .ts,.tsx,.js,.mjs . && prettier --check .",
+    "lint:fix": "eslint --ext .ts,.tsx,.js,.mjs . --fix && prettier -w ."
+  },
+  "keywords": [
+    "typescript",
+    "rust",
+    "option",
+    "result",
+    "some",
+    "none",
+    "ok",
+    "err",
+    "filterMap"
+  ],
+  "author": "CRIMX <straybugs@gmail.com> (https://github.com/crimx/)",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@typescript-eslint/parser": "^6.4.0",
+    "@vitest/coverage-c8": "^0.33.0",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-import": "^2.27.5",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.0",
+    "typedoc": "^0.24.8",
+    "typescript": "^5.1.6",
+    "vitest": "^0.34.2"
+  }
+}

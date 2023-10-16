@@ -1,0 +1,23 @@
+{
+  "language": "en",
+  "words": [
+    "coverallsapp",
+    "CRIMX",
+    "lcov",
+    "Parens",
+    "pnpm",
+    "preinstall",
+    "treeshake",
+    "tsup",
+    "tsur",
+    "typedoc"
+  ],
+  "ignorePaths": [
+    "**/coverage/**",
+    "**/node_modules/**",
+    "**/dist/**",
+    "cspell.config.js",
+    "pnpm-lock.yaml",
+    "CHANGELOG.md"
+  ]
+}
