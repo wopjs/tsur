@@ -39,3 +39,6 @@ jobs:
 
       - name: Build 🔧
         run: pnpm run build
+
+      - name: Test 🧪
+        run: pnpm run coverage

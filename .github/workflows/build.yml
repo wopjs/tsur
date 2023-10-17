@@ -39,3 +39,23 @@ jobs:
 
       - name: Build 🔧
         run: pnpm run build
+
+      - name: Test 🧪
+        run: pnpm run coverage
+
+      - name: Upload Coverage 📊
+        uses: paambaati/codeclimate-action@v4.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+        with:
+          coverageLocations: ${{github.workspace}}/coverage/clover.xml:clover
+
+      - name: Build Docs 📖
+        run: |
+          pnpm run docs
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: gh-pages
+          folder: docs
