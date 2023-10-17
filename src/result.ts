@@ -1,12 +1,17 @@
 import type { UnwrapOption } from "./option";
 
 import { Option } from "./option";
-import { ANY, RESULT } from "./utils";
+import { ERR, OK, RESULT } from "./utils";
 
 export type UnwrapOk<T, Default = T> = T extends Result<infer U> ? U : Default;
 export type UnwrapErr<E, Default = E> = E extends Result<infer _S, infer U>
   ? U
   : Default;
+
+export interface ResultMatcher<T = any, E = any, U = any> {
+  Ok: (value: T) => U;
+  Err: (error: E) => U;
+}
 
 /**
  * The `Result` type is an immutable representation of either success (`Ok`) or failure (`Err`).
@@ -16,15 +21,15 @@ export class Result<T = any, E = any> {
    * @param value - A value of type `T`
    * @returns Wrap a value into an `Result`.
    */
-  public static Ok = <T, E = never>(value: T): Result<T, E> =>
-    Object.freeze(new Result(value, ANY)) as Result<T, E>;
+  public static Ok = <T, E = any>(value: T): Result<T, E> =>
+    Object.freeze(new Result(value, ERR)) as Result<T, E>;
 
   /**
    * @param error - An error of type `E`
    * @returns Wrap an error into an `Result`.
    */
-  public static Err = <E, T = never>(error: E): Result<T, E> =>
-    Object.freeze(new Result(ANY, error)) as Result<T, E>;
+  public static Err = <E, T = any>(error: E): Result<T, E> =>
+    Object.freeze(new Result(OK, error)) as Result<T, E>;
 
   /**
    * `Err` if the value is an `Error`.
@@ -115,12 +120,12 @@ export class Result<T = any, E = any> {
   }
   private [RESULT] = 1;
 
-  private _value_: T;
-  private _error_: E;
+  private _value: T;
+  private _error: E;
 
   private constructor(value: T, error: E) {
-    this._value_ = value;
-    this._error_ = error;
+    this._value = value;
+    this._error = error;
   }
 
   /**
@@ -130,44 +135,38 @@ export class Result<T = any, E = any> {
    */
   *[Symbol.iterator]() {
     if (this.isOk()) {
-      yield this._value_;
+      yield this._value;
     }
   }
 
   /**
    * @returns `true` if the `Result` is an `Ok`.
    */
-  public isOk(): this is Ok<T> {
-    return this._value_ !== ANY;
+  public isOk(): boolean {
+    return this._value !== OK;
   }
 
   /**
    * @returns `true` if the `Result` is an `Err`.
    */
-  public isErr(): this is Err<E> {
-    return this._error_ !== ANY;
+  public isErr(): boolean {
+    return this._error !== ERR;
   }
 
   /**
    * @returns `true` if the `Result` is an `Ok` and and the value inside of it matches a predicate.
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
-  public isOkAnd(
-    predicate: (value: T) => boolean,
-    thisArg?: any
-  ): this is Ok<T> {
-    return this.isOk() && predicate.call(thisArg, this._value_);
+  public isOkAnd(predicate: (value: T) => boolean, thisArg?: any): boolean {
+    return this.isOk() && predicate.call(thisArg, this._value);
   }
 
   /**
    * @returns `true` if the `Result` is an `Err` and and the error inside of it matches a predicate.
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
-  public isErrAnd(
-    predicate: (value: T) => boolean,
-    thisArg?: any
-  ): this is Err<E> {
-    return this.isErr() && predicate.call(thisArg, this._value_);
+  public isErrAnd(predicate: (error: E) => boolean, thisArg?: any): boolean {
+    return this.isErr() && predicate.call(thisArg, this._error);
   }
 
   /**
@@ -178,7 +177,7 @@ export class Result<T = any, E = any> {
    */
   public isSame(other: unknown): boolean {
     return Result.isResult(other)
-      ? Object.is(this._value_, other._value_)
+      ? Object.is(this._value, other._value)
       : false;
   }
 
@@ -190,12 +189,12 @@ export class Result<T = any, E = any> {
    */
   public isSameErr(other: unknown): boolean {
     return Result.isResult(other)
-      ? Object.is(this._error_, other._error_)
+      ? Object.is(this._error, other._error)
       : false;
   }
 
   public and<BT, BE = any>(resultB: Result<BT, BE>): Result<BT, E | BE> {
-    return this.isOk() ? resultB : this;
+    return this.isOk() ? resultB : (this as Err<E | BE>);
   }
 
   /**
@@ -208,7 +207,9 @@ export class Result<T = any, E = any> {
     getResultB: (value: T) => Result<BT, BE>,
     thisArg?: any
   ): Result<BT, BE | E> {
-    return this.isOk() ? getResultB.call(thisArg, this._value_) : this;
+    return this.isOk()
+      ? getResultB.call(thisArg, this._value)
+      : (this as Err<BE | E>);
   }
 
   /**
@@ -240,8 +241,8 @@ export class Result<T = any, E = any> {
    */
   public flatten(): Result<UnwrapOk<T>, E | UnwrapErr<E>> {
     return this.isOk() &&
-      Result.isResult<UnwrapOk<T>, UnwrapErr<E>>(this._value_)
-      ? this._value_
+      Result.isResult<UnwrapOk<T>, UnwrapErr<E>>(this._value)
+      ? this._value
       : (this as Result<UnwrapOk<T>, E | UnwrapErr<E>>);
   }
 
@@ -253,18 +254,38 @@ export class Result<T = any, E = any> {
    * @returns `Err` if the `Result` is `Err`, otherwise returns `Ok(fn(value))`.
    */
   public map<U>(fn: (value: T) => U, thisArg?: any): Result<U, E> {
-    return this.isOk() ? Result.Ok(fn.call(thisArg, this._value_)) : this;
+    return this.isOk()
+      ? Result.Ok(fn.call(thisArg, this._value))
+      : (this as Err<E>);
   }
 
   /**
-   * Transposes a `Result` of an `Option` into an `Option` of a `Result`.
-   * `Ok(Some(_))` and `Err(_)` will be mapped to `Some(Ok(_))` and `Some(Err(_))`.
+   * Maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained `Err` value, leaving an `Ok` value untouched.
+   *
+   * This function can be used to pass through a successful result while handling an error.
+   *
+   * @param fn - A function that maps a error to another error
+   * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
+   * @returns `Ok` if the `Result` is `Ok`, otherwise returns `Err(fn(error))`.
+   */
+  public mapErr<U>(fn: (error: E) => U, thisArg?: any): Result<T, U> {
+    return this.isErr()
+      ? Result.Err(fn.call(thisArg, this._error))
+      : (this as Ok<T>);
+  }
+
+  /**
+   * Transposes a `Result(Option)` into `Option(Result)`.
+   *
+   * - `Ok(Some(_))` will be mapped to `Some(Ok(_))
+   * - `Err(_)` will be mapped to `Some(Err(_))`.
+   * - `Ok(_)` will be mapped to `Some(Ok(_))`.
    */
   public transpose(): Option<Result<UnwrapOption<T>, E>> {
     return this.isOk()
-      ? Option.isOption<UnwrapOption<T>>(this._value_)
-        ? this._value_.map(Result.Ok)
-        : Option.Some(this as Result<UnwrapOption<T>, E>)
+      ? Option.isOption<UnwrapOption<T>>(this._value)
+        ? this._value.map(Result.Ok)
+        : Option.Some(this)
       : Option.None;
   }
 
@@ -272,14 +293,14 @@ export class Result<T = any, E = any> {
    * Converts from `Result<T, E>` to `Option<T>` and discarding the error, if any.
    */
   public ok(): Option<T> {
-    return this.isOk() ? Option.Some(this._value_) : Option.None;
+    return this.isOk() ? Option.Some(this._value) : Option.None;
   }
 
   /**
    * Converts from `Result<T, E>` to `Option<E>` and discarding the value, if any.
    */
   public err(): Option<E> {
-    return this.isErr() ? Option.Some(this._error_) : Option.None;
+    return this.isErr() ? Option.Some(this._error) : Option.None;
   }
 
   /**
@@ -289,11 +310,9 @@ export class Result<T = any, E = any> {
    *
    * @param message - Optional Error message
    */
-  public unwrap(
-    message = "called `Result.unwrap()` on an `Err` error: " + this._error_
-  ): T {
+  public unwrap(message = "called `Result.unwrap()` on an `Err`"): T {
     if (this.isOk()) {
-      return this._value_;
+      return this._value;
     }
     throw new Error(message);
   }
@@ -311,7 +330,7 @@ export class Result<T = any, E = any> {
    */
   public unwrapOr<U>(defaultValue: U): T | U;
   public unwrapOr(defaultValue?: T): T | undefined {
-    return this.isOk() ? this._value_ : defaultValue;
+    return this.isOk() ? this._value : defaultValue;
   }
 
   /**
@@ -320,7 +339,7 @@ export class Result<T = any, E = any> {
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
   public unwrapOrElse<U>(fn: () => U, thisArg?: any): T | U {
-    return this.isOk() ? this._value_ : fn.call(thisArg);
+    return this.isOk() ? this._value : fn.call(thisArg);
   }
 
   /**
@@ -331,10 +350,10 @@ export class Result<T = any, E = any> {
    * @param message - Optional Error message
    */
   public unwrapErr(
-    message = "called `Result.unwrapErr()` on an `Ok` value: " + this._value_
-  ): T {
+    message = "called `Result.unwrapErr()` on an `Ok` value"
+  ): E {
     if (this.isErr()) {
-      return this._value_;
+      return this._error;
     }
     throw new Error(message);
   }
@@ -352,7 +371,7 @@ export class Result<T = any, E = any> {
    */
   public unwrapErrOr<U>(defaultError: U): E | U;
   public unwrapErrOr(defaultError?: E): E | undefined {
-    return this.isErr() ? this._error_ : defaultError;
+    return this.isErr() ? this._error : defaultError;
   }
 
   /**
@@ -361,7 +380,22 @@ export class Result<T = any, E = any> {
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
   public unwrapErrOrElse<U>(fn: () => U, thisArg?: any): E | U {
-    return this.isErr() ? this._error_ : fn.call(thisArg);
+    return this.isErr() ? this._error : fn.call(thisArg);
+  }
+
+  /**
+   * Extract the value from an `Result` in a way that handles both the `Ok` and `Err` cases.
+   *
+   * @param Ok - A function that returns a value if the `Result` is a `Ok`.
+   * @param Err - A function that returns a value if the `Result` is a `Err`.
+   * @returns The value returned by the provided function.
+   */
+  public match<U>(Ok: (value: T) => U, Err: (error: E) => U): U {
+    return this.isOk() ? Ok(this._value) : Err(this._error);
+  }
+
+  public toString(): string {
+    return this.isOk() ? `Ok(${this._value})` : `Err(${this._error})`;
   }
 }
 
@@ -369,12 +403,12 @@ export class Result<T = any, E = any> {
  * @param value - A value of type `T`
  * @returns Wrap a value into an `Result`.
  */
-export const Ok = Result.Ok;
+export const Ok = /* @__PURE__ */ (() => Result.Ok)();
 export type Ok<T> = Result<T, any>;
 
 /**
  * @param error - An error of type `E`
  * @returns Wrap an error into an `Result`.
  */
-export const Err = Result.Err;
+export const Err = /* @__PURE__ */ (() => Result.Err)();
 export type Err<E> = Result<any, E>;

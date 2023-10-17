@@ -117,7 +117,7 @@ export const lastIndex = <T>(
  *
  * @param arr - An array
  * @param predicate - A predicate function.
- * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
+ * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, the first element is returned.
  * @returns The first item that matches the predicate, or `None` if no item matches.
  */
 export const first = <T>(
@@ -131,14 +131,14 @@ export const first = <T>(
  *
  * @param arr - An array
  * @param predicate - A predicate function.
- * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
+ * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, the last element is returned.
  * @returns The last item that matches the predicate, or `None` if no item matches.
  */
 export const last = <T>(
   arr: T[],
   predicate: (value: T, index: number, array: T[]) => boolean = truePredicate,
   thisArg?: any
-): Option<T> => lastIndex(arr, predicate, thisArg).map(valueAtIndex, this);
+): Option<T> => lastIndex(arr, predicate, thisArg).map(valueAtIndex, arr);
 
 /**
  * Applies function to the elements of iterator and returns the first non-none result.
