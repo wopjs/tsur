@@ -11,6 +11,8 @@
 
 TypeScript goodies inspired by Rust.
 
+This project draws inspiration from Rust, but is designed to be more ergonomic and tailored to TypeScript's features and syntax.
+
 ## Install
 
 ```
