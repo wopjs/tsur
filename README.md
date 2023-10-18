@@ -64,6 +64,28 @@ if (result.isOk()) {
 }
 ```
 
+### Chaining
+
+```ts
+import { Option } from "@wopjs/tsur";
+
+function get(obj: any, key: string): Option<any> {
+  return key in obj ? Some(obj[key]) : None;
+}
+
+const obj = {
+  a: {
+    b: {
+      c: 42,
+    },
+  },
+};
+
+const result = get(obj, "a")
+  .map(x => x.b)
+  .unwrapOr("default");
+```
+
 ### Array
 
 Many useful array methods are added:
