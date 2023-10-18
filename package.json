@@ -1,9 +1,9 @@
 {
-  "name": "tsur",
+  "name": "@wopjs/tsur",
   "private": true,
   "version": "0.0.1",
   "description": "TypeScript goodies inspired by Rust.",
-  "repository": "crimx/tsur",
+  "repository": "wopjs/tsur",
   "main": "./index.js",
   "module": "./index.mjs",
   "types": "./index.d.ts",
@@ -23,6 +23,7 @@
   "keywords": [
     "typescript",
     "rust",
+    "monad",
     "option",
     "result",
     "some",

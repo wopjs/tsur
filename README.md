@@ -1,13 +1,13 @@
-# [tsur](https://github.com/crimx/tsur)
+# [tsur](https://github.com/wopjs/tsur)
 
 <p align="center">
-  <img width="200" src="https://raw.githubusercontent.com/crimx/tsur/main/assets/tsur.svg">
+  <img width="200" src="https://raw.githubusercontent.com/wopjs/tsur/main/assets/tsur.svg">
 </p>
 
-[![Docs](https://img.shields.io/badge/Docs-read-%23fdf9f5)](https://crimx.github.io/tsur)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/crimx/tsur/build.yml)](https://github.com/crimx/tsur/actions/workflows/build.yml)
-[![npm-version](https://img.shields.io/npm/v/tsur.svg)](https://www.npmjs.com/package/tsur)
-[![Coverage Status](https://img.shields.io/coveralls/github/crimx/tsur/main)](https://coveralls.io/github/crimx/tsur?branch=main)
+[![Docs](https://img.shields.io/badge/Docs-read-%23fdf9f5)](https://wopjs.github.io/tsur)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/wopjs/tsur/build.yml)](https://github.com/wopjs/tsur/actions/workflows/build.yml)
+[![npm-version](https://img.shields.io/npm/v/@wopjs/tsur.svg)](https://www.npmjs.com/package/@wopjs/tsur)
+[![Coverage Status](https://img.shields.io/coveralls/github/wopjs/tsur/main)](https://coveralls.io/github/wopjs/tsur?branch=main)
 
 TypeScript goodies inspired by Rust.
 
@@ -16,7 +16,7 @@ This project draws inspiration from Rust, but is designed to be more ergonomic a
 ## Install
 
 ```
-npm add tsur
+npm add @wopjs/tsur
 ```
 
 ## Usage
@@ -24,9 +24,9 @@ npm add tsur
 ### Option
 
 ```ts
-import { Option, Some, None } from "tsur";
+import { Option, Some, None } from "@wopjs/tsur";
 
-const maybeNumber = Option.Some(42);
+const maybeNumber = Some(42);
 
 if (maybeNumber.isSome()) {
   console.log(maybeNumber.unwrap()); // 42
@@ -34,7 +34,7 @@ if (maybeNumber.isSome()) {
   console.log("There is no number");
 }
 
-const maybeString = Option.None;
+const maybeString = None;
 
 if (maybeString.isSome()) {
   console.log(maybeString.unwrap());
@@ -46,7 +46,7 @@ if (maybeString.isSome()) {
 ### Result
 
 ```ts
-import { Result, Ok, Err } from "tsur";
+import { Result, Ok, Err } from "@wopjs/tsur";
 
 function divide(a: number, b: number): Result<number, string> {
   if (b === 0) {
@@ -69,7 +69,7 @@ if (result.isOk()) {
 Many useful array methods are added:
 
 ```ts
-import { filterMap, Some, None } from "tsur";
+import { filterMap, Some, None } from "@wopjs/tsur";
 
 const arr = [1, 2, 3, 4, 5];
 
@@ -81,7 +81,7 @@ console.log(result); // [4, 8]
 Or you can patch them to the native array:
 
 ```ts
-import "tsur/patches/array";
+import "@wopjs/tsur/patches/array";
 
 const arr = [1, 2, 3, 4, 5];
 

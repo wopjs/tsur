@@ -10,7 +10,8 @@
     "treeshake",
     "tsup",
     "tsur",
-    "typedoc"
+    "typedoc",
+    "wopjs"
   ],
   "ignorePaths": [
     "**/coverage/**",
