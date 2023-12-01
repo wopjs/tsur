@@ -112,7 +112,7 @@ const result = arr.filterMap(x => (x % 2 === 0 ? Some(x * 2) : None));
 console.log(result); // [4, 8]
 ```
 
-See [docs](https://crimx.github.io/tsur) for more details.
+See [docs](https://wopjs.github.io/tsur/) for more details.
 
 ## License
 
