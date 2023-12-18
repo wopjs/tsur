@@ -74,6 +74,19 @@ export class Option<T = any> {
   public static isOption<T>(maybeOption: unknown): maybeOption is Option<T> {
     return !!maybeOption && (maybeOption as Option<T>)[OPTION] === 1;
   }
+
+  /**
+   * @returns `true` if the both are `Option` and the value are the same via `Object.is`.
+   *
+   * @param a - An `Option` or any value
+   * @param b - An `Option` or any value
+   */
+  public static isSame(a: unknown, b: unknown): boolean {
+    return Option.isOption(a) && Option.isOption(b)
+      ? Object.is(a._value, b._value)
+      : false;
+  }
+
   private readonly [OPTION] = 1;
 
   private readonly _value: T;

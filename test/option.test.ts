@@ -42,6 +42,37 @@ describe("Option", () => {
     });
   });
 
+  describe("isSame", () => {
+    it("returns true if both are the same Some value", () => {
+      const result = Option.isSame(Some("a"), Some("a"));
+      expect(result).toBe(true);
+    });
+
+    it("returns true if both are the same None", () => {
+      const result = Option.isSame(None, None);
+      expect(result).toBe(true);
+    });
+
+    it("returns false when the input is a different Some value", () => {
+      const result = Option.isSame(Some("a"), Some("b"));
+      expect(result).toBe(false);
+    });
+
+    it("returns false when the input is None", () => {
+      const some = Some("hello");
+      const none = None;
+      const result = Option.isSame(some, none);
+      expect(result).toBe(false);
+    });
+
+    it("returns false when the input is a different type", () => {
+      const some = Some("hello");
+      const obj = { value: "hello" };
+      const result = Option.isSame(some, obj);
+      expect(result).toBe(false);
+    });
+  });
+
   describe("isSome", () => {
     it("returns true for a Some", () => {
       const some = Some("hello");
@@ -209,6 +240,13 @@ describe("Option", () => {
       const some1 = Some("hello");
       const some2 = Some("hello");
       const result = some1.isSame(some2);
+      expect(result).toBe(true);
+    });
+
+    it("returns true when the input is the same None", () => {
+      const none1 = None;
+      const none2 = None;
+      const result = none1.isSame(none2);
       expect(result).toBe(true);
     });
 
