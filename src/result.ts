@@ -118,6 +118,21 @@ export class Result<T = any, E = any> {
   ): maybeResult is Result<T, E> {
     return !!maybeResult && (maybeResult as Result<T>)[RESULT] === 1;
   }
+
+  /**
+   * @returns `true` if the both are `Result` and the `Ok` value or `Err` error are the same via `Object.is`.
+   *
+   * @param a - An `Result` or any value
+   * @param b - An `Result` or any value
+   */
+  public static isSame(a: unknown, b: unknown): boolean {
+    return Result.isResult(a) && Result.isResult(b)
+      ? a.isOk()
+        ? Object.is(a._value, b._value)
+        : Object.is(a._error, b._error)
+      : false;
+  }
+
   private [RESULT] = 1;
 
   private _value: T;
@@ -170,26 +185,16 @@ export class Result<T = any, E = any> {
   }
 
   /**
-   * Whether `this` value is the same as the other `Result`.
+   * Whether `this` `Ok` value or `Err` error is the same as the other `Result`.
    *
    * @param other - Another `Result` or any value
-   * @returns `true` if the other is an `Result` and the value is the same as `this` value via `Object.is`.
+   * @returns `true` if the other is an `Result` and the `Ok` value or `Err` error is the same as `this` via `Object.is`.
    */
   public isSame(other: unknown): boolean {
     return Result.isResult(other)
-      ? Object.is(this._value, other._value)
-      : false;
-  }
-
-  /**
-   * Whether `this` error is the same as the other `Result`.
-   *
-   * @param other - Another `Result` or any value
-   * @returns `true` if the other is an `Option` and the error is the same as `this` error via `Object.is`.
-   */
-  public isSameErr(other: unknown): boolean {
-    return Result.isResult(other)
-      ? Object.is(this._error, other._error)
+      ? this.isOk()
+        ? Object.is(this._value, other._value)
+        : Object.is(this._error, other._error)
       : false;
   }
 

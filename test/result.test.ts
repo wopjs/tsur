@@ -54,6 +54,37 @@ describe("Result", () => {
     });
   });
 
+  describe("isSame", () => {
+    it("returns true if both are the same Ok value", () => {
+      const result = Result.isSame(Ok("a"), Ok("a"));
+      expect(result).toBe(true);
+    });
+
+    it("returns true if both are the same Err error", () => {
+      const result = Result.isSame(Err("error"), Err("error"));
+      expect(result).toBe(true);
+    });
+
+    it("returns false when the input is a different Ok value", () => {
+      const result = Result.isSame(Ok("a"), Ok("b"));
+      expect(result).toBe(false);
+    });
+
+    it("returns false when the input is Err", () => {
+      const ok = Ok("hello");
+      const err = Err("error");
+      const result = Result.isSame(ok, err);
+      expect(result).toBe(false);
+    });
+
+    it("returns false when the input is a different type", () => {
+      const ok = Ok("hello");
+      const obj = { value: "hello" };
+      const result = Result.isSame(ok, obj);
+      expect(result).toBe(false);
+    });
+  });
+
   describe("try", () => {
     it("should return an Ok result if the function does not throw an error", () => {
       const fn = () => 42;
@@ -435,24 +466,6 @@ describe("Result", () => {
       const result = Err(error);
       expect(result.isSame(Err(error))).toBe(true);
       expect(result.isSame(Some(error))).toBe(false);
-    });
-  });
-
-  describe("isSameErr", () => {
-    it("should return true if the Result is an Err variant and the error message is equal to the given message", () => {
-      const error = new Error("Something went wrong");
-      const result = Err(error);
-      expect(result.isSameErr(Err(error))).toBe(true);
-    });
-
-    it("should return false if the Result is an Err variant and the error message is not equal to the given message", () => {
-      const result = Err(new Error("Something went wrong"));
-      expect(result.isSameErr("Something else went wrong")).toBe(false);
-    });
-
-    it("should return false if the Result is an Ok variant", () => {
-      const result = Ok(42);
-      expect(result.isSameErr("Something went wrong")).toBe(false);
     });
   });
 
