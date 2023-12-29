@@ -167,6 +167,18 @@ describe("Option", () => {
       expect(filtered.isNone()).toBe(true);
       expect(() => filtered.unwrap()).toThrow();
     });
+
+    it("should narrow typings", () => {
+      const some = Some(true);
+      const toTrue = (value: boolean): value is true => !!value;
+      const filtered = some.filter(toTrue);
+
+      //@ts-expect-error should be true
+      const _result: false = filtered.unwrap();
+
+      const result: true = filtered.unwrap();
+      expect(result).toBe(true);
+    });
   });
 
   describe("or", () => {

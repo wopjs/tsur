@@ -252,12 +252,25 @@ export class Option<T = any> {
 
   /**
    * Returns `None` if the `Option` is `None`, otherwise calls predicate with the wrapped value and returns:
+   * - `Some(t)` if predicate returns `true` (where `t` is the wrapped value with inferred new type), and
+   * - `None` if predicate returns `false`.
+   *
+   * @param predicate - A type predicate function that defines type guard by returning `true` or `false`.
+   * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
+   */
+  public filter<U extends T>(
+    predicate: (value: T) => value is U,
+    thisArg?: any
+  ): Option<U>;
+  /**
+   * Returns `None` if the `Option` is `None`, otherwise calls predicate with the wrapped value and returns:
    * - `Some(t)` if predicate returns `true` (where `t` is the wrapped value), and
    * - `None` if predicate returns `false`.
    *
-   * @param predicate - A function that returns `true` or `false`
+   * @param predicate - A function that returns `true` or `false`.
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
+  public filter(predicate: (value: T) => boolean, thisArg?: any): Option<T>;
   public filter(predicate: (value: T) => boolean, thisArg?: any): Option<T> {
     return this.isSome() && predicate.call(thisArg, this._value)
       ? this
