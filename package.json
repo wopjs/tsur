@@ -5,7 +5,6 @@
   "description": "TypeScript goodies inspired by Rust.",
   "repository": "wopjs/tsur",
   "main": "./index.js",
-  "module": "./index.mjs",
   "types": "./index.d.ts",
   "sideEffects": [
     "./patches/*"
