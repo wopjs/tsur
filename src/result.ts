@@ -1,7 +1,7 @@
 import type { UnwrapOption } from "./option";
 
 import { Option } from "./option";
-import { ERR, OK, RESULT } from "./utils";
+import { SPECIES, SPECIES_RESULT } from "./utils";
 
 export type UnwrapOk<T, Default = T> = T extends Result<infer U> ? U : Default;
 export type UnwrapErr<E, Default = E> = E extends Result<infer _S, infer U>
@@ -21,15 +21,15 @@ export class Result<T = any, E = any> {
    * @param value - A value of type `T`
    * @returns Wrap a value into an `Result`.
    */
-  public static Ok = <T, E = any>(value: T): Result<T, E> =>
-    Object.freeze(new Result(value, ERR)) as Result<T, E>;
+  public static readonly Ok = <T, E = any>(value: T): Result<T, E> =>
+    Object.freeze(new Result<T, E>(value, true)) as Result<T, E>;
 
   /**
    * @param error - An error of type `E`
    * @returns Wrap an error into an `Result`.
    */
-  public static Err = <E, T = any>(error: E): Result<T, E> =>
-    Object.freeze(new Result(OK, error)) as Result<T, E>;
+  public static readonly Err = <E, T = any>(error: E): Result<T, E> =>
+    Object.freeze(new Result<T, E>(error, false)) as Result<T, E>;
 
   /**
    * `Err` if the value is an `Error`.
@@ -51,7 +51,6 @@ export class Result<T = any, E = any> {
     predicate: (source: T | E) => source is T,
     thisArg?: any
   ): Result<T, E>;
-
   /**
    * `OK` if the value satisfies the predicate, otherwise `Err`
    *
@@ -116,7 +115,9 @@ export class Result<T = any, E = any> {
   public static isResult<T, E>(
     maybeResult: unknown
   ): maybeResult is Result<T, E> {
-    return !!maybeResult && (maybeResult as Result<T>)[RESULT] === 1;
+    return (
+      !!maybeResult && (maybeResult as Result<T>)[SPECIES] === SPECIES_RESULT
+    );
   }
 
   /**
@@ -127,20 +128,18 @@ export class Result<T = any, E = any> {
    */
   public static isSame(a: unknown, b: unknown): boolean {
     return Result.isResult(a) && Result.isResult(b)
-      ? a.isOk()
-        ? Object.is(a._value, b._value)
-        : Object.is(a._error, b._error)
+      ? Object.is(a._value, b._value)
       : false;
   }
 
-  private [RESULT] = 1;
+  private readonly [SPECIES] = SPECIES_RESULT;
 
-  private _value: T;
-  private _error: E;
+  private readonly _value: T | E;
+  private readonly _ok: boolean;
 
-  private constructor(value: T, error: E) {
+  private constructor(value: T | E, ok: boolean) {
     this._value = value;
-    this._error = error;
+    this._ok = ok;
   }
 
   /**
@@ -149,8 +148,8 @@ export class Result<T = any, E = any> {
    * The iterator yields one value if the result is `Ok`, otherwise none.
    */
   *[Symbol.iterator]() {
-    if (this.isOk()) {
-      yield this._value;
+    if (this._ok) {
+      yield this._value as T;
     }
   }
 
@@ -158,14 +157,14 @@ export class Result<T = any, E = any> {
    * @returns `true` if the `Result` is an `Ok`.
    */
   public isOk(): boolean {
-    return this._value !== OK;
+    return this._ok;
   }
 
   /**
    * @returns `true` if the `Result` is an `Err`.
    */
   public isErr(): boolean {
-    return this._error !== ERR;
+    return !this._ok;
   }
 
   /**
@@ -173,7 +172,7 @@ export class Result<T = any, E = any> {
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
   public isOkAnd(predicate: (value: T) => boolean, thisArg?: any): boolean {
-    return this.isOk() && predicate.call(thisArg, this._value);
+    return this._ok && predicate.call(thisArg, this._value as T);
   }
 
   /**
@@ -181,7 +180,7 @@ export class Result<T = any, E = any> {
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
   public isErrAnd(predicate: (error: E) => boolean, thisArg?: any): boolean {
-    return this.isErr() && predicate.call(thisArg, this._error);
+    return !this._ok && predicate.call(thisArg, this._value as E);
   }
 
   /**
@@ -192,14 +191,12 @@ export class Result<T = any, E = any> {
    */
   public isSame(other: unknown): boolean {
     return Result.isResult(other)
-      ? this.isOk()
-        ? Object.is(this._value, other._value)
-        : Object.is(this._error, other._error)
+      ? Object.is(this._value, other._value)
       : false;
   }
 
   public and<BT, BE = any>(resultB: Result<BT, BE>): Result<BT, E | BE> {
-    return this.isOk() ? resultB : (this as Err<E | BE>);
+    return this._ok ? resultB : (this as Err<E | BE>);
   }
 
   /**
@@ -212,8 +209,8 @@ export class Result<T = any, E = any> {
     getResultB: (value: T) => Result<BT, BE>,
     thisArg?: any
   ): Result<BT, BE | E> {
-    return this.isOk()
-      ? getResultB.call(thisArg, this._value)
+    return this._ok
+      ? getResultB.call(thisArg, this._value as T)
       : (this as Err<BE | E>);
   }
 
@@ -225,7 +222,7 @@ export class Result<T = any, E = any> {
    * @param resultB - A `Result`
    */
   public or<BT, BE = any>(resultB: Result<BT, BE>): Result<T | BT, E | BE> {
-    return this.isOk() ? this : resultB;
+    return this._ok ? this : resultB;
   }
 
   /**
@@ -238,15 +235,14 @@ export class Result<T = any, E = any> {
     getResultB: () => Result<BT, BE>,
     thisArg?: any
   ): Result<T | BT, E | BE> {
-    return this.isOk() ? this : getResultB.call(thisArg);
+    return this._ok ? this : getResultB.call(thisArg);
   }
 
   /**
    * Converts from `Option<Option<T>>` to `Option<T>`
    */
   public flatten(): Result<UnwrapOk<T>, E | UnwrapErr<E>> {
-    return this.isOk() &&
-      Result.isResult<UnwrapOk<T>, UnwrapErr<E>>(this._value)
+    return this._ok && Result.isResult<UnwrapOk<T>, UnwrapErr<E>>(this._value)
       ? this._value
       : (this as Result<UnwrapOk<T>, E | UnwrapErr<E>>);
   }
@@ -259,8 +255,8 @@ export class Result<T = any, E = any> {
    * @returns `Err` if the `Result` is `Err`, otherwise returns `Ok(fn(value))`.
    */
   public map<U>(fn: (value: T) => U, thisArg?: any): Result<U, E> {
-    return this.isOk()
-      ? Result.Ok(fn.call(thisArg, this._value))
+    return this._ok
+      ? Result.Ok(fn.call(thisArg, this._value as T))
       : (this as Err<E>);
   }
 
@@ -274,9 +270,9 @@ export class Result<T = any, E = any> {
    * @returns `Ok` if the `Result` is `Ok`, otherwise returns `Err(fn(error))`.
    */
   public mapErr<U>(fn: (error: E) => U, thisArg?: any): Result<T, U> {
-    return this.isErr()
-      ? Result.Err(fn.call(thisArg, this._error))
-      : (this as Ok<T>);
+    return this._ok
+      ? (this as Ok<T>)
+      : Result.Err(fn.call(thisArg, this._value as E));
   }
 
   /**
@@ -287,7 +283,7 @@ export class Result<T = any, E = any> {
    * - `Ok(_)` will be mapped to `Some(Ok(_))`.
    */
   public transpose(): Option<Result<UnwrapOption<T>, E>> {
-    return this.isOk()
+    return this._ok
       ? Option.isOption<UnwrapOption<T>>(this._value)
         ? this._value.map(Result.Ok)
         : Option.Some(this)
@@ -298,14 +294,14 @@ export class Result<T = any, E = any> {
    * Converts from `Result<T, E>` to `Option<T>` and discarding the error, if any.
    */
   public ok(): Option<T> {
-    return this.isOk() ? Option.Some(this._value) : Option.None;
+    return this._ok ? Option.Some(this._value) : Option.None;
   }
 
   /**
    * Converts from `Result<T, E>` to `Option<E>` and discarding the value, if any.
    */
   public err(): Option<E> {
-    return this.isErr() ? Option.Some(this._error) : Option.None;
+    return this._ok ? Option.None : Option.Some(this._value);
   }
 
   /**
@@ -316,8 +312,8 @@ export class Result<T = any, E = any> {
    * @param message - Optional Error message
    */
   public unwrap(message = "called `Result.unwrap()` on an `Err`"): T {
-    if (this.isOk()) {
-      return this._value;
+    if (this._ok) {
+      return this._value as T;
     }
     throw new Error(message);
   }
@@ -335,7 +331,7 @@ export class Result<T = any, E = any> {
    */
   public unwrapOr<U>(defaultValue: U): T | U;
   public unwrapOr(defaultValue?: T): T | undefined {
-    return this.isOk() ? this._value : defaultValue;
+    return this._ok ? (this._value as T) : defaultValue;
   }
 
   /**
@@ -344,7 +340,7 @@ export class Result<T = any, E = any> {
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
   public unwrapOrElse<U>(fn: () => U, thisArg?: any): T | U {
-    return this.isOk() ? this._value : fn.call(thisArg);
+    return this._ok ? (this._value as T) : fn.call(thisArg);
   }
 
   /**
@@ -357,10 +353,10 @@ export class Result<T = any, E = any> {
   public unwrapErr(
     message = "called `Result.unwrapErr()` on an `Ok` value"
   ): E {
-    if (this.isErr()) {
-      return this._error;
+    if (this._ok) {
+      throw new Error(message);
     }
-    throw new Error(message);
+    return this._value as E;
   }
 
   /**
@@ -376,7 +372,7 @@ export class Result<T = any, E = any> {
    */
   public unwrapErrOr<U>(defaultError: U): E | U;
   public unwrapErrOr(defaultError?: E): E | undefined {
-    return this.isErr() ? this._error : defaultError;
+    return this._ok ? defaultError : (this._value as E);
   }
 
   /**
@@ -385,7 +381,7 @@ export class Result<T = any, E = any> {
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
   public unwrapErrOrElse<U>(fn: () => U, thisArg?: any): E | U {
-    return this.isErr() ? this._error : fn.call(thisArg);
+    return this._ok ? fn.call(thisArg) : (this._value as E);
   }
 
   /**
@@ -396,11 +392,11 @@ export class Result<T = any, E = any> {
    * @returns The value returned by the provided function.
    */
   public match<U>(Ok: (value: T) => U, Err: (error: E) => U): U {
-    return this.isOk() ? Ok(this._value) : Err(this._error);
+    return this._ok ? Ok(this._value as T) : Err(this._value as E);
   }
 
   public toString(): string {
-    return this.isOk() ? `Ok(${this._value})` : `Err(${this._error})`;
+    return `${this._ok ? "Ok" : "Err"}(${this._value})`;
   }
 }
 

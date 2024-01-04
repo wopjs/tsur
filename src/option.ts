@@ -1,7 +1,7 @@
 import type { UnwrapErr, UnwrapOk } from "./result";
 
 import { Result } from "./result";
-import { NONE, OPTION } from "./utils";
+import { NONE, SPECIES, SPECIES_OPTION } from "./utils";
 
 type Falsy = false | 0 | 0n | "" | null | undefined;
 type Truthy<T> = Exclude<T, Falsy>;
@@ -72,7 +72,9 @@ export class Option<T = any> {
    * @param maybeOption - A value that might be an `Option`
    */
   public static isOption<T>(maybeOption: unknown): maybeOption is Option<T> {
-    return !!maybeOption && (maybeOption as Option<T>)[OPTION] === 1;
+    return (
+      !!maybeOption && (maybeOption as Option<T>)[SPECIES] === SPECIES_OPTION
+    );
   }
 
   /**
@@ -87,7 +89,7 @@ export class Option<T = any> {
       : false;
   }
 
-  private readonly [OPTION] = 1;
+  private readonly [SPECIES] = SPECIES_OPTION;
 
   private readonly _value: T;
 
