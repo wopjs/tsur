@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.5](https://github.com/wopjs/tsur/compare/v0.1.4...v0.1.5) (2024-11-13)
+
+
+### Bug Fixes
+
+* **publish:** publish in dist ([514fab6](https://github.com/wopjs/tsur/commit/514fab6fe3c77b5f3751c85c646b6b48b0246ea2))
+
 ## [0.1.4](https://github.com/wopjs/tsur/compare/v0.1.3...v0.1.4) (2024-11-13)
 
 
