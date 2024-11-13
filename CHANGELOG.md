@@ -1,6 +1,13 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [0.1.4](https://github.com/wopjs/tsur/compare/v0.1.3...v0.1.4) (2024-11-13)
+
+
+### Features
+
+* **option:** add option static unwrapOr ([fc08856](https://github.com/wopjs/tsur/commit/fc088568beb892807e4996b1d8531a8e3ca34fae))
 
 ### [0.1.3](https://github.com/wopjs/tsur/compare/v0.1.2...v0.1.3) (2024-01-04)
 
