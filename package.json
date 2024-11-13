@@ -10,7 +10,7 @@
     "./patches/*"
   ],
   "scripts": {
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run build && echo 'Run the npm publish command inside `dist`.' && exit 1",
     "lint": "eslint && prettier --check .",
     "docs": "typedoc --options typedoc.json",
     "test": "vitest",

@@ -31,6 +31,8 @@ jobs:
         run: npm run build
 
       - name: Publish Package 🚀
-        run: npm publish --provenance --access public
+        run: |
+          cd dist
+          npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
