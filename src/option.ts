@@ -89,6 +89,17 @@ export class Option<T = any> {
       : false;
   }
 
+  /**
+   * @returns the `unwrapOr()` result if the value is an `Option`, otherwise the value itself.
+   *
+   * @param valueOrOption - A value of type `T` or an `Option<T>`
+   */
+  public static unwrapOr<T>(valueOrOption: T | Option<T>): T | undefined {
+    return Option.isOption(valueOrOption)
+      ? valueOrOption.unwrapOr()
+      : valueOrOption;
+  }
+
   private readonly [SPECIES] = SPECIES_OPTION;
 
   private readonly _value: T;
@@ -346,6 +357,8 @@ export class Option<T = any> {
 
   /**
    * @returns the contained `Some` value or `undefined` otherwise.
+   *
+   * Arguments passed to `unwrapOr` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `unwrapOrElse`, which is lazily evaluated.
    */
   public unwrapOr(): T | undefined;
   /**

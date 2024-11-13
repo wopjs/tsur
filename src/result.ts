@@ -361,6 +361,8 @@ export class Result<T = any, E = any> {
 
   /**
    * @returns the contained `Err` error or `undefined` otherwise.
+   *
+   * Arguments passed to `unwrapErrOr` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `unwrapErrOrElse`, which is lazily evaluated.
    */
   public unwrapErrOr(): E | undefined;
   /**

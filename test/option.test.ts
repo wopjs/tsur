@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import { Option, Some, None, Err, Ok } from "../src";
 
 describe("Option", () => {
-  describe("Some", () => {
+  describe("Option.Some", () => {
     it("creates a Some with a value", () => {
       const some = Some("hello");
       expect(some.isSome()).toBe(true);
@@ -11,14 +11,14 @@ describe("Option", () => {
     });
   });
 
-  describe("None", () => {
+  describe("Option.None", () => {
     it("creates a None", () => {
       expect(None.isNone()).toBe(true);
       expect(() => None.unwrap()).toThrow();
     });
   });
 
-  describe("from", () => {
+  describe("Option.from", () => {
     it("creates a Some for a truthy value", () => {
       const some = Option.from("hello");
       expect(some.isSome()).toBe(true);
@@ -42,7 +42,7 @@ describe("Option", () => {
     });
   });
 
-  describe("isSame", () => {
+  describe("Option.isSame", () => {
     it("returns true if both are the same Some value", () => {
       const result = Option.isSame(Some("a"), Some("a"));
       expect(result).toBe(true);
@@ -70,6 +70,20 @@ describe("Option", () => {
       const obj = { value: "hello" };
       const result = Option.isSame(some, obj);
       expect(result).toBe(false);
+    });
+  });
+
+  describe("Option.unwrapOr", () => {
+    it("returns the value for a Some", () => {
+      expect(Option.unwrapOr(Some("hello"))).toBe("hello");
+    });
+
+    it("returns the value if the value if not an Option", () => {
+      expect(Option.unwrapOr("hello")).toBe("hello");
+    });
+
+    it("returns undefined for a None", () => {
+      expect(None.unwrapOr("world")).toBe("world");
     });
   });
 
