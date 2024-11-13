@@ -8,54 +8,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm 📦
-        id: pnpm-install
+      - uses: actions/setup-node@v4
         with:
-          version: 8
-          run_install: false
-
-      - name: Get pnpm store directory 📦
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v3
-        name: Setup pnpm cache 📦
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+          node-version: lts/*
+          cache: npm
 
       - name: Install dependencies 📦
-        run: pnpm install
+        run: npm ci
 
       - name: Lint 🧹
-        run: pnpm run lint
+        run: npm run lint
 
       - name: Build 🔧
-        run: pnpm run build
+        run: npm run build
 
       - name: Test 🧪
-        run: pnpm run coverage
+        run: npm run test:ci
 
-      - name: Upload Coverage 📊
-        uses: paambaati/codeclimate-action@v5.0.0
-        env:
-          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+      - name: Coveralls 🎉
+        uses: coverallsapp/github-action@v2
         with:
-          coverageLocations: ${{github.workspace}}/coverage/clover.xml:clover
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docs 📖
-        run: |
-          pnpm run docs
+        run: npm run docs
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.5
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: docs

@@ -1,4 +1,4 @@
-import "../src/patches/array";
+import "../src/patches";
 import { expect, describe, it } from "vitest";
 
 import { None, Some } from "../src";

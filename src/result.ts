@@ -4,9 +4,8 @@ import { Option } from "./option";
 import { SPECIES, SPECIES_RESULT } from "./utils";
 
 export type UnwrapOk<T, Default = T> = T extends Result<infer U> ? U : Default;
-export type UnwrapErr<E, Default = E> = E extends Result<infer _S, infer U>
-  ? U
-  : Default;
+export type UnwrapErr<E, Default = E> =
+  E extends Result<infer _S, infer U> ? U : Default;
 
 export interface ResultMatcher<T = any, E = any, U = any> {
   Ok: (value: T) => U;

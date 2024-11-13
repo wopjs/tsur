@@ -6,9 +6,8 @@ import { NONE, SPECIES, SPECIES_OPTION } from "./utils";
 type Falsy = false | 0 | 0n | "" | null | undefined;
 type Truthy<T> = Exclude<T, Falsy>;
 
-export type UnwrapOption<T, Default = T> = T extends Option<infer U>
-  ? U
-  : Default;
+export type UnwrapOption<T, Default = T> =
+  T extends Option<infer U> ? U : Default;
 
 /**
  * The `Option` type is an immutable representation of an optional value:
@@ -247,7 +246,7 @@ export class Option<T = any> {
    */
   public unzip(): [
     Option<T extends any[] ? T[0] : unknown>,
-    Option<T extends any[] ? T[1] : unknown>
+    Option<T extends any[] ? T[1] : unknown>,
   ] {
     return this.isSome() && Array.isArray(this._value)
       ? [Option.Some(this._value[0]), Option.Some(this._value[1])]

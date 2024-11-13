@@ -7,7 +7,8 @@
 [![Docs](https://img.shields.io/badge/Docs-read-%23fdf9f5)](https://wopjs.github.io/tsur)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/wopjs/tsur/build.yml)](https://github.com/wopjs/tsur/actions/workflows/build.yml)
 [![npm-version](https://img.shields.io/npm/v/@wopjs/tsur.svg)](https://www.npmjs.com/package/@wopjs/tsur)
-[![Coverage Status](https://img.shields.io/codeclimate/coverage/wopjs/tsur)](https://codeclimate.com/github/wopjs/tsur)
+[![Coverage Status](https://img.shields.io/coverallsCoverage/github/wopjs/tsur)](https://coveralls.io/github/wopjs/tsur)
+[![minified-size](https://img.shields.io/bundlephobia/minzip/@wopjs/tsur)](https://bundlephobia.com/package/@wopjs/tsur)
 
 TypeScript goodies inspired by Rust.
 

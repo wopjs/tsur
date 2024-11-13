@@ -76,7 +76,6 @@ export const reduceWhile = <T, U = T>(
     if (result.isNone()) {
       break;
     }
-    arr.reduce;
     acc = result.unwrap();
   }
   return acc;
