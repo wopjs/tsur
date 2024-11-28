@@ -96,9 +96,9 @@ export class Result<T = any, E = any> {
    * @returns `Ok` with the resolved value or `Err` with the exception error or the rejected value.
    */
   public static async tryAsync<T = any, E = any, TArgs extends any[] = []>(
-    fn: (...args: TArgs) => T,
+    fn: (...args: TArgs) => T | Promise<T>,
     ...args: TArgs
-  ): Promise<Result<T, E>> {
+  ): Promise<Result<Awaited<T>, E>> {
     try {
       return Result.Ok(await fn(...args));
     } catch (error: any) {

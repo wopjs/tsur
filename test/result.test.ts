@@ -114,7 +114,8 @@ describe("Result", () => {
       expect(result).toBeInstanceOf(Result);
       expect(result.isOk()).toBe(true);
       expect(result.isErr()).toBe(false);
-      expect(result.unwrap()).toBe(42);
+      const value: number = result.unwrap();
+      expect(value).toBe(42);
     });
 
     it("should return an Err result if the function throws an error", async () => {
