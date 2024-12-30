@@ -44,9 +44,9 @@
     "eslint-plugin-import": "^2.31.0",
     "prettier": "^3.4.2",
     "rimraf": "^6.0.1",
-    "typedoc": "^0.27.5",
+    "typedoc": "^0.27.6",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.18.1",
+    "typescript-eslint": "^8.18.2",
     "vitest": "^2.1.2"
   }
 }
