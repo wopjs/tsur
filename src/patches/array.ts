@@ -1,5 +1,3 @@
-import type { Option } from "../option";
-
 import {
   mapWhile,
   reduceWhile,
@@ -11,6 +9,7 @@ import {
   lastMap,
   filterMap,
 } from "../array";
+import { type Option } from "../option";
 
 declare global {
   interface Array<T> {

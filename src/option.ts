@@ -1,6 +1,4 @@
-import type { UnwrapErr, UnwrapOk } from "./result";
-
-import { Result } from "./result";
+import { type UnwrapErr, type UnwrapOk, Result } from "./result";
 import { NONE, SPECIES, SPECIES_OPTION } from "./utils";
 
 type Falsy = false | 0 | 0n | "" | null | undefined;

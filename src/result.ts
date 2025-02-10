@@ -1,6 +1,4 @@
-import type { UnwrapOption } from "./option";
-
-import { Option } from "./option";
+import { type UnwrapOption, Option } from "./option";
 import { SPECIES, SPECIES_RESULT } from "./utils";
 
 export type UnwrapOk<T, Default = T> = T extends Result<infer U> ? U : Default;
