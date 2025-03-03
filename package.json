@@ -40,8 +40,8 @@
     "ts-check": "tsc --noEmit",
     "docs": "typedoc --options typedoc.json",
     "test": "vitest",
-    "test:coverage": "vitest --coverage --coverage.include=src/**",
-    "test:ci": "tsc --noEmit && vitest --coverage --coverage.reporter=lcov --coverage.include=src/**",
+    "test:coverage": "vitest --coverage",
+    "test:ci": "tsc --noEmit && vitest --coverage",
     "build": "tsup",
     "release": "commit-and-tag-version"
   },
@@ -69,6 +69,7 @@
     "tsup": "^8.4.0",
     "typedoc": "^0.27.9",
     "typescript": "^5.8.2",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.0.4"
   }
 }
