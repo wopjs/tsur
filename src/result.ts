@@ -283,7 +283,7 @@ export class Result<T = any, E = any> {
     return this._ok
       ? Option.isOption<UnwrapOption<T>>(this._value)
         ? this._value.map(Result.Ok)
-        : Option.Some(this)
+        : Option.Some(this as Ok<UnwrapOption<T>>)
       : Option.None;
   }
 
@@ -291,14 +291,14 @@ export class Result<T = any, E = any> {
    * Converts from `Result<T, E>` to `Option<T>` and discarding the error, if any.
    */
   public ok(): Option<T> {
-    return this._ok ? Option.Some(this._value) : Option.None;
+    return this._ok ? Option.Some(this._value as T) : Option.None;
   }
 
   /**
    * Converts from `Result<T, E>` to `Option<E>` and discarding the value, if any.
    */
   public err(): Option<E> {
-    return this._ok ? Option.None : Option.Some(this._value);
+    return this._ok ? Option.None : Option.Some(this._value as E);
   }
 
   /**

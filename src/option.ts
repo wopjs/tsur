@@ -311,7 +311,7 @@ export class Option<T = any> {
     return this.isSome()
       ? Result.isResult<UnwrapOk<T>, UnwrapErr<T>>(this._value)
         ? this._value.map(Option.Some)
-        : Result.Ok(this)
+        : Result.Ok(this as Option<UnwrapOk<T>>)
       : Result.Ok(Option.None);
   }
 
