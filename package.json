@@ -4,10 +4,34 @@
   "version": "0.1.6",
   "description": "TypeScript goodies inspired by Rust.",
   "repository": "wopjs/tsur",
-  "main": "./index.js",
-  "types": "./index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./patches": {
+      "types": "./dist/patches.d.mts",
+      "require": "./dist/patches.js",
+      "import": "./dist/patches.mjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "patches": [
+        "dist/patches.d.ts"
+      ]
+    }
+  },
   "sideEffects": [
-    "./patches/*"
+    "**/patches.*",
+    "**/patches/*"
+  ],
+  "files": [
+    "src",
+    "dist"
   ],
   "scripts": {
     "prepublishOnly": "npm run build && echo 'Run the npm publish command inside `dist`.' && exit 1",
@@ -18,7 +42,7 @@
     "test": "vitest",
     "test:coverage": "vitest --coverage --coverage.include=src/**",
     "test:ci": "tsc --noEmit && vitest --coverage --coverage.reporter=lcov --coverage.include=src/**",
-    "build": "rimraf dist && tsc && node ./scripts/package.mjs",
+    "build": "tsup",
     "release": "commit-and-tag-version"
   },
   "keywords": [
@@ -42,7 +66,7 @@
     "commit-and-tag-version": "^12.5.0",
     "eslint": "^9.21.0",
     "prettier": "^3.5.3",
-    "rimraf": "^6.0.1",
+    "tsup": "^8.4.0",
     "typedoc": "^0.27.9",
     "typescript": "^5.8.2",
     "vitest": "^3.0.4"

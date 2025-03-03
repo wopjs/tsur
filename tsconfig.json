@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -11,6 +12,9 @@
     "noImplicitOverride": true,
     "noUnusedParameters": true,
     "outDir": "dist",
+    "paths": {
+      "@wopjs/tsur": ["src"]
+    },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,

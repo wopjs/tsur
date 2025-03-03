@@ -8,8 +8,8 @@ import {
   firstMap,
   lastMap,
   filterMap,
-} from "../array";
-import { type Option } from "../option";
+  type Option,
+} from "@wopjs/tsur";
 
 declare global {
   interface Array<T> {
