@@ -18,15 +18,17 @@ export class Result<T = any, E = any> {
    * @param value - A value of type `T`
    * @returns Wrap a value into an `Result`.
    */
-  public static readonly Ok = <T, E = any>(value: T): Result<T, E> =>
-    Object.freeze(new Result<T, E>(value, true)) as Result<T, E>;
+  public static Ok<T, E = any>(value: T): Result<T, E> {
+    return Object.freeze(new Result<T, E>(value, true)) as Result<T, E>;
+  }
 
   /**
    * @param error - An error of type `E`
    * @returns Wrap an error into an `Result`.
    */
-  public static readonly Err = <E, T = any>(error: E): Result<T, E> =>
-    Object.freeze(new Result<T, E>(error, false)) as Result<T, E>;
+  public static Err<E, T = any>(error: E): Result<T, E> {
+    return Object.freeze(new Result<T, E>(error, false)) as Result<T, E>;
+  }
 
   /**
    * `Err` if the value is an `Error`.

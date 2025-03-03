@@ -16,8 +16,9 @@ export class Option<T = any> {
    * @param value - A value of type `T`
    * @returns Wrap a value into an `Option`.
    */
-  public static Some = <T = any>(value: T): Option<T> =>
-    Object.freeze(new Option(value)) as Option<T>;
+  public static Some<T = any>(value: T): Option<T> {
+    return Object.freeze(new Option(value)) as Option<T>;
+  }
 
   /**
    * The `None` value.
