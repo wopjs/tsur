@@ -525,7 +525,7 @@ describe("Option", () => {
     it("calls the error function with the provided thisArg", () => {
       const input = None;
       const thisArg = { message: "error" };
-      const errorFn = function () {
+      const errorFn = function (this: typeof thisArg) {
         return this.message;
       };
       const result = input.okOrElse(errorFn, thisArg);
