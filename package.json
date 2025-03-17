@@ -61,13 +61,13 @@
   "license": "MIT",
   "devDependencies": {
     "@vitest/coverage-v8": "^3.0.8",
-    "@wopjs/eslint-config": "^0.1.13",
+    "@wopjs/eslint-config": "^0.1.14",
     "@wopjs/gzip-size": "^0.1.0",
     "commit-and-tag-version": "^12.5.0",
     "eslint": "^9.22.0",
     "prettier": "^3.5.3",
     "tsup": "^8.4.0",
-    "typedoc": "^0.27.9",
+    "typedoc": "^0.28.0",
     "typescript": "^5.8.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.0.4"
