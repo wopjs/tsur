@@ -1,6 +1,5 @@
 {
   "name": "@wopjs/tsur",
-  "private": true,
   "version": "0.1.7",
   "description": "TypeScript goodies inspired by Rust.",
   "repository": "wopjs/tsur",
@@ -34,7 +33,7 @@
     "dist"
   ],
   "scripts": {
-    "prepublishOnly": "npm run build && echo 'Run the npm publish command inside `dist`.' && exit 1",
+    "prepublishOnly": "npm run build",
     "lint": "eslint && prettier --check .",
     "lint:fix": "eslint --fix && prettier --write .",
     "ts-check": "tsc --noEmit",
