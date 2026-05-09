@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { None, Result, Some, Ok, Err } from "../src";
+import { Err, None, Ok, Result, Some } from "../src";
 
 describe("Result", () => {
   describe("Ok", () => {
@@ -46,7 +46,7 @@ describe("Result", () => {
 
     it("should return a Result base on predicate", () => {
       const value = 42;
-      const result = Result.from(value, x => x > 10);
+      const result = Result.from(value, (x) => x > 10);
       expect(result).toBeInstanceOf(Result);
       expect(result.isOk()).toBe(true);
       expect(result.isErr()).toBe(false);
@@ -245,7 +245,7 @@ describe("Result", () => {
     it("should apply the callback to the value of an Ok result", () => {
       const value = 42;
       const result = Ok(value);
-      const mappedResult = result.map(x => x * 2);
+      const mappedResult = result.map((x) => x * 2);
       expect(mappedResult.isOk()).toBe(true);
       expect(mappedResult.unwrap()).toBe(value * 2);
     });
@@ -253,7 +253,7 @@ describe("Result", () => {
     it("should not apply the callback to an Err result", () => {
       const error = new Error("Something went wrong");
       const result = Err(error);
-      const mappedResult = result.map(x => x * 2);
+      const mappedResult = result.map((x) => x * 2);
       expect(mappedResult.isErr()).toBe(true);
       expect(mappedResult.unwrapErr()).toBe(error);
     });
@@ -263,9 +263,7 @@ describe("Result", () => {
     it("should apply the callback to the error of an Err result", () => {
       const error = new Error("Something went wrong");
       const result = Err(error);
-      const mappedResult = result.mapErr(
-        e => new Error(e.message.toUpperCase())
-      );
+      const mappedResult = result.mapErr((e) => new Error(e.message.toUpperCase()));
       expect(mappedResult.isErr()).toBe(true);
       expect(mappedResult.unwrapErr().message).toBe("SOMETHING WENT WRONG");
     });
@@ -273,9 +271,7 @@ describe("Result", () => {
     it("should not apply the callback to an Ok result", () => {
       const value = 42;
       const result = Ok(value);
-      const mappedResult = result.mapErr(
-        e => new Error(e.message.toUpperCase())
-      );
+      const mappedResult = result.mapErr((e) => new Error(e.message.toUpperCase()));
       expect(mappedResult.isOk()).toBe(true);
       expect(mappedResult.unwrap()).toBe(value);
     });
@@ -370,8 +366,8 @@ describe("Result", () => {
       const value = 42;
       const result = Ok(value);
       const matchResult = result.match(
-        x => x * 2,
-        () => 0
+        (x) => x * 2,
+        () => 0,
       );
       expect(matchResult).toBe(value * 2);
     });
@@ -381,7 +377,7 @@ describe("Result", () => {
       const result = Err(error);
       const matchResult = result.match<0 | string>(
         () => 0,
-        e => e.message.toUpperCase()
+        (e) => e.message.toUpperCase(),
       );
       expect(matchResult).toBe("SOMETHING WENT WRONG");
     });
@@ -390,8 +386,8 @@ describe("Result", () => {
       const value = 42;
       const result = Ok(value);
       const matchResult = result.match(
-        x => Ok(x * 2),
-        () => Err(new Error("Something went wrong"))
+        (x) => Ok(x * 2),
+        () => Err(new Error("Something went wrong")),
       );
       expect(matchResult.isOk()).toBe(true);
       expect(matchResult.unwrap()).toBe(value * 2);
@@ -401,8 +397,8 @@ describe("Result", () => {
       const value = 42;
       const result = Ok(value);
       const matchResult = result.match(
-        x => Some(x * 2),
-        () => None
+        (x) => Some(x * 2),
+        () => None,
       );
       expect(matchResult).toEqual(Some(value * 2));
     });
@@ -431,22 +427,19 @@ describe("Result", () => {
   describe("isErrAnd", () => {
     it("should return true if the Result is an Err variant and the predicate returns true", () => {
       const result = Err(new Error("Something went wrong"));
-      const predicate = (error: Error) =>
-        error.message === "Something went wrong";
+      const predicate = (error: Error) => error.message === "Something went wrong";
       expect(result.isErrAnd(predicate)).toBe(true);
     });
 
     it("should return false if the Result is an Err variant and the predicate returns false", () => {
       const result = Err(new Error("Something went wrong"));
-      const predicate = (error: Error) =>
-        error.message === "Something else went wrong";
+      const predicate = (error: Error) => error.message === "Something else went wrong";
       expect(result.isErrAnd(predicate)).toBe(false);
     });
 
     it("should return false if the Result is an Ok variant", () => {
       const result = Ok(42);
-      const predicate = (error: Error) =>
-        error.message === "Something went wrong";
+      const predicate = (error: Error) => error.message === "Something went wrong";
       expect(result.isErrAnd(predicate)).toBe(false);
     });
   });

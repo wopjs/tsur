@@ -1,14 +1,14 @@
 import {
-  mapWhile,
-  reduceWhile,
-  firstIndex,
-  lastIndex,
-  first,
-  last,
-  firstMap,
-  lastMap,
   filterMap,
+  first,
+  firstIndex,
+  firstMap,
+  last,
+  lastIndex,
+  lastMap,
+  mapWhile,
   type Option,
+  reduceWhile,
 } from "@wopjs/tsur";
 
 declare global {
@@ -24,10 +24,7 @@ declare global {
      * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
      * @returns An array of filtered and mapped values.
      */
-    $filterMap<U>(
-      fn: (value: T, index: number, array: T[]) => Option<U>,
-      thisArg?: any
-    ): U[];
+    $filterMap<U>(fn: (value: T, index: number, array: T[]) => Option<U>, thisArg?: any): U[];
 
     /**
      * From tsur.
@@ -38,10 +35,7 @@ declare global {
      * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
      * @returns An array of mapped values.
      */
-    $mapWhile<U>(
-      fn: (value: T, index: number, array: T[]) => Option<U>,
-      thisArg?: any
-    ): U[];
+    $mapWhile<U>(fn: (value: T, index: number, array: T[]) => Option<U>, thisArg?: any): U[];
 
     /**
      * From tsur.
@@ -54,14 +48,9 @@ declare global {
      * @returns The reduced value.
      */
     $reduceWhile<U = T>(
-      fn: (
-        previousValue: U,
-        currentValue: T,
-        currentIndex: number,
-        array: T[]
-      ) => Option<U>,
+      fn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => Option<U>,
       initialValue: U,
-      thisArg?: any
+      thisArg?: any,
     ): U;
 
     /**
@@ -73,10 +62,7 @@ declare global {
      * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
      * @returns The index of the first item that matches the predicate, or `None` if no item matches.
      */
-    $firstIndex(
-      predicate: (value: T, index: number, array: T[]) => boolean,
-      thisArg?: any
-    ): Option<number>;
+    $firstIndex(predicate: (value: T, index: number, array: T[]) => boolean, thisArg?: any): Option<number>;
 
     /**
      * From tsur.
@@ -87,10 +73,7 @@ declare global {
      * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
      * @returns The index of the last item that matches the predicate, or `None` if no item matches.
      */
-    $lastIndex(
-      predicate: (value: T, index: number, array: T[]) => boolean,
-      thisArg?: any
-    ): Option<number>;
+    $lastIndex(predicate: (value: T, index: number, array: T[]) => boolean, thisArg?: any): Option<number>;
 
     /**
      * From tsur.
@@ -101,10 +84,7 @@ declare global {
      * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
      * @returns The first item that matches the predicate, or `None` if no item matches.
      */
-    $first(
-      predicate?: (value: T, index: number, array: T[]) => boolean,
-      thisArg?: any
-    ): Option<T>;
+    $first(predicate?: (value: T, index: number, array: T[]) => boolean, thisArg?: any): Option<T>;
 
     /**
      * From tsur.
@@ -115,10 +95,7 @@ declare global {
      * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
      * @returns The last item that matches the predicate, or `None` if no item matches.
      */
-    $last(
-      predicate?: (value: T, index: number, array: T[]) => boolean,
-      thisArg?: any
-    ): Option<T>;
+    $last(predicate?: (value: T, index: number, array: T[]) => boolean, thisArg?: any): Option<T>;
 
     /**
      * From tsur.
@@ -131,10 +108,7 @@ declare global {
      * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
      * @returns The first non-none result.
      */
-    $firstMap<U>(
-      fn: (value: T, index: number, array: T[]) => Option<U>,
-      thisArg?: any
-    ): Option<U>;
+    $firstMap<U>(fn: (value: T, index: number, array: T[]) => Option<U>, thisArg?: any): Option<U>;
 
     /**
      * From tsur.
@@ -145,10 +119,7 @@ declare global {
      * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
      * @returns The last non-none result.
      */
-    $lastMap<U>(
-      fn: (value: T, index: number, array: T[]) => Option<U>,
-      thisArg?: any
-    ): Option<U>;
+    $lastMap<U>(fn: (value: T, index: number, array: T[]) => Option<U>, thisArg?: any): Option<U>;
   }
 }
 

@@ -14,7 +14,7 @@ import { positiveNumber, truePredicate } from "./utils";
 export const filterMap = <T, U>(
   arr: T[],
   fn: (value: T, index: number, array: T[]) => Option<U>,
-  thisArg?: any
+  thisArg?: any,
 ): U[] => {
   const results: U[] = [];
   for (let i = 0; i < arr.length; i++) {
@@ -37,7 +37,7 @@ export const filterMap = <T, U>(
 export const mapWhile = <T, U>(
   arr: T[],
   fn: (value: T, index: number, array: T[]) => Option<U>,
-  thisArg?: any
+  thisArg?: any,
 ): U[] => {
   const results: U[] = [];
   for (let i = 0; i < arr.length; i++) {
@@ -61,14 +61,9 @@ export const mapWhile = <T, U>(
  */
 export const reduceWhile = <T, U = T>(
   arr: T[],
-  fn: (
-    previousValue: U,
-    currentValue: T,
-    currentIndex: number,
-    array: T[]
-  ) => Option<U>,
+  fn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => Option<U>,
   initialValue: U,
-  thisArg?: any
+  thisArg?: any,
 ): U => {
   let acc = initialValue;
   for (let i = 0; i < arr.length; i++) {
@@ -92,9 +87,8 @@ export const reduceWhile = <T, U = T>(
 export const firstIndex = <T>(
   arr: T[],
   predicate: (value: T, index: number, array: T[]) => boolean,
-  thisArg?: any
-): Option<number> =>
-  Option.from(arr.findIndex(predicate, thisArg), positiveNumber);
+  thisArg?: any,
+): Option<number> => Option.from(arr.findIndex(predicate, thisArg), positiveNumber);
 
 /**
  * Returns the index of the last element in the array where predicate is true, and `None` otherwise.
@@ -107,9 +101,8 @@ export const firstIndex = <T>(
 export const lastIndex = <T>(
   arr: T[],
   predicate: (value: T, index: number, array: T[]) => boolean,
-  thisArg?: any
-): Option<number> =>
-  Option.from(arr.findLastIndex(predicate, thisArg), positiveNumber);
+  thisArg?: any,
+): Option<number> => Option.from(arr.findLastIndex(predicate, thisArg), positiveNumber);
 
 /**
  * `first` finds the first item that matches a predicate. Returns the first item of array if no predicate is provided.
@@ -122,7 +115,7 @@ export const lastIndex = <T>(
 export const first = <T>(
   arr: T[],
   predicate: (value: T, index: number, array: T[]) => boolean = truePredicate,
-  thisArg?: any
+  thisArg?: any,
 ): Option<T> => firstIndex(arr, predicate, thisArg).map(valueAtIndex, arr);
 
 /**
@@ -136,7 +129,7 @@ export const first = <T>(
 export const last = <T>(
   arr: T[],
   predicate: (value: T, index: number, array: T[]) => boolean = truePredicate,
-  thisArg?: any
+  thisArg?: any,
 ): Option<T> => lastIndex(arr, predicate, thisArg).map(valueAtIndex, arr);
 
 /**
@@ -152,7 +145,7 @@ export const last = <T>(
 export const firstMap = <T, U>(
   arr: T[],
   fn: (value: T, index: number, array: T[]) => Option<U>,
-  thisArg?: any
+  thisArg?: any,
 ): Option<U> => {
   for (let i = 0; i < arr.length; i++) {
     const result = fn.call(thisArg, arr[i], i, arr);
@@ -174,7 +167,7 @@ export const firstMap = <T, U>(
 export const lastMap = <T, U>(
   arr: T[],
   fn: (value: T, index: number, array: T[]) => Option<U>,
-  thisArg?: any
+  thisArg?: any,
 ): Option<U> => {
   for (let i = arr.length - 1; i >= 0; i--) {
     const result = fn.call(thisArg, arr[i], i, arr);

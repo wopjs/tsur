@@ -1,9 +1,8 @@
-import { type UnwrapOption, Option } from "./option";
+import { Option, type UnwrapOption } from "./option";
 import { SPECIES, SPECIES_RESULT } from "./utils";
 
 export type UnwrapOk<T, Default = T> = T extends Result<infer U> ? U : Default;
-export type UnwrapErr<E, Default = E> =
-  E extends Result<infer _S, infer U> ? U : Default;
+export type UnwrapErr<E, Default = E> = E extends Result<infer _S, infer U> ? U : Default;
 
 export interface ResultMatcher<T = any, E = any, U = any> {
   Ok: (value: T) => U;
@@ -33,11 +32,9 @@ export class Result<T = any, E = any> {
   /**
    * `Err` if the value is an `Error`.
    *
-   * @param value - A value of type `T`
+   * @param source - A value of type `T`
    */
-  public static from<T = any, E extends Error = Error>(
-    source: T | E
-  ): Result<T, E>;
+  public static from<T = any, E extends Error = Error>(source: T | E): Result<T, E>;
   /**
    * `OK` if the value satisfies the predicate, otherwise `Err`
    *
@@ -48,7 +45,7 @@ export class Result<T = any, E = any> {
   public static from<T = any, E = any>(
     source: T | E,
     predicate: (source: T | E) => source is T,
-    thisArg?: any
+    thisArg?: any,
   ): Result<T, E>;
   /**
    * `OK` if the value satisfies the predicate, otherwise `Err`
@@ -60,16 +57,14 @@ export class Result<T = any, E = any> {
   public static from<T = any, E = any>(
     source: T | E,
     predicate: (source: T | E) => boolean,
-    thisArg?: any
+    thisArg?: any,
   ): Result<T, E>;
   public static from<T = any, E = any>(
     source: T | E,
     predicate?: (source: T | E) => boolean,
-    thisArg?: any
+    thisArg?: any,
   ): Result<T> {
-    return (
-      predicate ? predicate.call(thisArg, source) : !(source instanceof Error)
-    )
+    return (predicate ? predicate.call(thisArg, source) : !(source instanceof Error))
       ? Result.Ok(source as T)
       : Result.Err(source as E);
   }
@@ -111,12 +106,8 @@ export class Result<T = any, E = any> {
    *
    * @param maybeResult - A value that might be an `Result`
    */
-  public static isResult<T, E>(
-    maybeResult: unknown
-  ): maybeResult is Result<T, E> {
-    return (
-      !!maybeResult && (maybeResult as Result<T>)[SPECIES] === SPECIES_RESULT
-    );
+  public static isResult<T, E>(maybeResult: unknown): maybeResult is Result<T, E> {
+    return !!maybeResult && (maybeResult as Result<T>)[SPECIES] === SPECIES_RESULT;
   }
 
   /**
@@ -126,14 +117,17 @@ export class Result<T = any, E = any> {
    * @param b - An `Result` or any value
    */
   public static isSame(a: unknown, b: unknown): boolean {
-    return Result.isResult(a) && Result.isResult(b)
-      ? Object.is(a._value, b._value)
-      : false;
+    return Result.isResult(a) && Result.isResult(b) ? Object.is(a._value, b._value) : false;
   }
 
+  /** @internal */
+  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: used in static methods
   private readonly [SPECIES] = SPECIES_RESULT;
 
+  /** @internal */
   private readonly _value: T | E;
+
+  /** @internal */
   private readonly _ok: boolean;
 
   private constructor(value: T | E, ok: boolean) {
@@ -189,9 +183,7 @@ export class Result<T = any, E = any> {
    * @returns `true` if the other is an `Result` and the `Ok` value or `Err` error is the same as `this` via `Object.is`.
    */
   public isSame(other: unknown): boolean {
-    return Result.isResult(other)
-      ? Object.is(this._value, other._value)
-      : false;
+    return Result.isResult(other) ? Object.is(this._value, other._value) : false;
   }
 
   public and<BT, BE = any>(resultB: Result<BT, BE>): Result<BT, E | BE> {
@@ -204,13 +196,8 @@ export class Result<T = any, E = any> {
    * @param getResultB - A function that returns a `Result`
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
-  public andThen<BT, BE = any>(
-    getResultB: (value: T) => Result<BT, BE>,
-    thisArg?: any
-  ): Result<BT, BE | E> {
-    return this._ok
-      ? getResultB.call(thisArg, this._value as T)
-      : (this as Err<BE | E>);
+  public andThen<BT, BE = any>(getResultB: (value: T) => Result<BT, BE>, thisArg?: any): Result<BT, BE | E> {
+    return this._ok ? getResultB.call(thisArg, this._value as T) : (this as Err<BE | E>);
   }
 
   /**
@@ -230,10 +217,7 @@ export class Result<T = any, E = any> {
    * @param getResultB - A function that returns an `Result`
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
-  public orElse<BT, BE = any>(
-    getResultB: () => Result<BT, BE>,
-    thisArg?: any
-  ): Result<T | BT, E | BE> {
+  public orElse<BT, BE = any>(getResultB: () => Result<BT, BE>, thisArg?: any): Result<T | BT, E | BE> {
     return this._ok ? this : getResultB.call(thisArg);
   }
 
@@ -254,9 +238,7 @@ export class Result<T = any, E = any> {
    * @returns `Err` if the `Result` is `Err`, otherwise returns `Ok(fn(value))`.
    */
   public map<U>(fn: (value: T) => U, thisArg?: any): Result<U, E> {
-    return this._ok
-      ? Result.Ok(fn.call(thisArg, this._value as T))
-      : (this as Err<E>);
+    return this._ok ? Result.Ok(fn.call(thisArg, this._value as T)) : (this as Err<E>);
   }
 
   /**
@@ -269,9 +251,7 @@ export class Result<T = any, E = any> {
    * @returns `Ok` if the `Result` is `Ok`, otherwise returns `Err(fn(error))`.
    */
   public mapErr<U>(fn: (error: E) => U, thisArg?: any): Result<T, U> {
-    return this._ok
-      ? (this as Ok<T>)
-      : Result.Err(fn.call(thisArg, this._value as E));
+    return this._ok ? (this as Ok<T>) : Result.Err(fn.call(thisArg, this._value as E));
   }
 
   /**
@@ -349,9 +329,7 @@ export class Result<T = any, E = any> {
    *
    * @param message - Optional Error message
    */
-  public unwrapErr(
-    message = "called `Result.unwrapErr()` on an `Ok` value"
-  ): E {
+  public unwrapErr(message = "called `Result.unwrapErr()` on an `Ok` value"): E {
     if (this._ok) {
       throw new Error(message);
     }

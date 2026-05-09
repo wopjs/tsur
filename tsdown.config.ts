@@ -1,16 +1,16 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from "tsdown";
 
 export default defineConfig({
+  clean: true,
+  dts: true,
   entry: {
     index: "src/index.ts",
     patches: "src/patches/index.ts",
   },
   format: ["cjs", "esm"],
-  splitting: false,
+  minify: Boolean(process.env.MINIFY),
   sourcemap: false,
-  clean: true,
-  treeshake: true,
-  dts: true,
-  minify: false,
+  target: "esnext",
+  treeshake: false,
   external: ["@wopjs/tsur"],
 });

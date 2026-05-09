@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import { Option, Some, None, Err, Ok } from "../src";
+import { Err, None, Ok, Option, Some } from "../src";
 
 describe("Option", () => {
   describe("Option.Some", () => {
@@ -32,11 +32,11 @@ describe("Option", () => {
     });
 
     it("creates an Option with custom predicate", () => {
-      const some = Option.from("hello", x => x.length > 3);
+      const some = Option.from("hello", (x) => x.length > 3);
       expect(some.isSome()).toBe(true);
       expect(some.unwrap()).toBe("hello");
 
-      const none = Option.from("hello", x => x.length > 10);
+      const none = Option.from("hello", (x) => x.length > 10);
       expect(none.isNone()).toBe(true);
       expect(() => none.unwrap()).toThrow();
     });
@@ -149,7 +149,7 @@ describe("Option", () => {
   describe("map", () => {
     it("applies a function to a Some", () => {
       const some = Some("hello");
-      const mapped = some.map(x => x.toUpperCase());
+      const mapped = some.map((x) => x.toUpperCase());
       expect(mapped.isSome()).toBe(true);
       expect(mapped.unwrap()).toBe("HELLO");
     });
@@ -164,20 +164,20 @@ describe("Option", () => {
   describe("filter", () => {
     it("returns the Some if it satisfies the predicate", () => {
       const some = Some(1);
-      const filtered = some.filter(x => x > 0);
+      const filtered = some.filter((x) => x > 0);
       expect(filtered.isSome()).toBe(true);
       expect(filtered.unwrap()).toBe(1);
     });
 
     it("returns None if it does not satisfy the predicate", () => {
       const some = Some(-1);
-      const filtered = some.filter(x => x > 0);
+      const filtered = some.filter((x) => x > 0);
       expect(filtered.isNone()).toBe(true);
       expect(() => filtered.unwrap()).toThrow();
     });
 
     it("returns None for a None", () => {
-      const filtered = None.filter(x => x > 0);
+      const filtered = None.filter((x) => x > 0);
       expect(filtered.isNone()).toBe(true);
       expect(() => filtered.unwrap()).toThrow();
     });
@@ -331,13 +331,13 @@ describe("Option", () => {
   describe("andThen", () => {
     it("applies a function to a Some and returns the result", () => {
       const some = Some("hello");
-      const andThen = some.andThen(x => Some(x.toUpperCase()));
+      const andThen = some.andThen((x) => Some(x.toUpperCase()));
       expect(andThen.isSome()).toBe(true);
       expect(andThen.unwrap()).toBe("HELLO");
     });
 
     it("returns None for a None", () => {
-      const andThen = None.andThen(x => Some(x.toUpperCase()));
+      const andThen = None.andThen((x) => Some(x.toUpperCase()));
       expect(andThen.isNone()).toBe(true);
       expect(() => andThen.unwrap()).toThrow();
     });

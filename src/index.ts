@@ -1,3 +1,3 @@
+export * from "./array";
 export * from "./option";
 export * from "./result";
-export * from "./array";

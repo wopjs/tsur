@@ -1,11 +1,10 @@
-import { type UnwrapErr, type UnwrapOk, Result } from "./result";
+import { Result, type UnwrapErr, type UnwrapOk } from "./result";
 import { NONE, SPECIES, SPECIES_OPTION } from "./utils";
 
-type Falsy = false | 0 | 0n | "" | null | undefined;
-type Truthy<T> = Exclude<T, Falsy>;
+export type Falsy = false | 0 | 0n | "" | null | undefined;
+export type Truthy<T> = Exclude<T, Falsy>;
 
-export type UnwrapOption<T, Default = T> =
-  T extends Option<infer U> ? U : Default;
+export type UnwrapOption<T, Default = T> = T extends Option<infer U> ? U : Default;
 
 /**
  * The `Option` type is an immutable representation of an optional value:
@@ -41,7 +40,7 @@ export class Option<T = any> {
   public static from<TSource, T extends TSource = TSource>(
     source: TSource,
     predicate: (source: TSource) => source is T,
-    thisArg?: any
+    thisArg?: any,
   ): Option<T>;
   /**
    * Wrap a value in an `Option` if the value satisfies the predicate.
@@ -52,16 +51,14 @@ export class Option<T = any> {
   public static from<TSource, T extends TSource = TSource>(
     source: TSource,
     predicate: (source: TSource) => boolean,
-    thisArg?: any
+    thisArg?: any,
   ): Option<T>;
   public static from<TSource, T extends TSource = TSource>(
     source: TSource,
     predicate?: (source: TSource) => boolean,
-    thisArg?: any
+    thisArg?: any,
   ): Option<T> {
-    return (predicate ? predicate.call(thisArg, source) : source)
-      ? Option.Some(source as T)
-      : Option.None;
+    return (predicate ? predicate.call(thisArg, source) : source) ? Option.Some(source as T) : Option.None;
   }
 
   /**
@@ -70,9 +67,7 @@ export class Option<T = any> {
    * @param maybeOption - A value that might be an `Option`
    */
   public static isOption<T>(maybeOption: unknown): maybeOption is Option<T> {
-    return (
-      !!maybeOption && (maybeOption as Option<T>)[SPECIES] === SPECIES_OPTION
-    );
+    return !!maybeOption && (maybeOption as Option<T>)[SPECIES] === SPECIES_OPTION;
   }
 
   /**
@@ -82,9 +77,7 @@ export class Option<T = any> {
    * @param b - An `Option` or any value
    */
   public static isSame(a: unknown, b: unknown): boolean {
-    return Option.isOption(a) && Option.isOption(b)
-      ? Object.is(a._value, b._value)
-      : false;
+    return Option.isOption(a) && Option.isOption(b) ? Object.is(a._value, b._value) : false;
   }
 
   /**
@@ -93,13 +86,14 @@ export class Option<T = any> {
    * @param valueOrOption - A value of type `T` or an `Option<T>`
    */
   public static unwrapOr<T>(valueOrOption: T | Option<T>): T | undefined {
-    return Option.isOption(valueOrOption)
-      ? valueOrOption.unwrapOr()
-      : valueOrOption;
+    return Option.isOption(valueOrOption) ? valueOrOption.unwrapOr() : valueOrOption;
   }
 
+  /** @internal */
+  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: used in static methods
   private readonly [SPECIES] = SPECIES_OPTION;
 
+  /** @internal */
   private readonly _value: T;
 
   private constructor(value: T) {
@@ -148,9 +142,7 @@ export class Option<T = any> {
    * @returns `true` if the other is an `Option` and the value are the same as `this` value via `Object.is`.
    */
   public isSame(other: unknown): boolean {
-    return Option.isOption(other)
-      ? Object.is(this._value, other._value)
-      : false;
+    return Option.isOption(other) ? Object.is(this._value, other._value) : false;
   }
 
   /**
@@ -170,10 +162,7 @@ export class Option<T = any> {
    * @param getOptionB - A function that returns an `Option`
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
-  public andThen<B>(
-    getOptionB: (value: T) => Option<B>,
-    thisArg?: any
-  ): Option<B> {
+  public andThen<B>(getOptionB: (value: T) => Option<B>, thisArg?: any): Option<B> {
     return this.isSome() ? getOptionB.call(thisArg, this._value) : Option.None;
   }
 
@@ -215,9 +204,7 @@ export class Option<T = any> {
    * @param optionB
    */
   public zip<B>(optionB: Option<B>): Option<[T, B]> {
-    return this.isSome() && optionB.isSome()
-      ? Option.Some([this._value, optionB._value])
-      : Option.None;
+    return this.isSome() && optionB.isSome() ? Option.Some([this._value, optionB._value]) : Option.None;
   }
 
   /**
@@ -228,14 +215,8 @@ export class Option<T = any> {
    * @param optionB
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
-  public zipWith<B, U>(
-    optionB: Option<B>,
-    fn: (valueA: T, valueB: B) => U,
-    thisArg?: any
-  ): Option<U> {
-    return this.isSome() && optionB.isSome()
-      ? Option.Some(fn.call(thisArg, this._value, optionB._value))
-      : Option.None;
+  public zipWith<B, U>(optionB: Option<B>, fn: (valueA: T, valueB: B) => U, thisArg?: any): Option<U> {
+    return this.isSome() && optionB.isSome() ? Option.Some(fn.call(thisArg, this._value, optionB._value)) : Option.None;
   }
 
   /**
@@ -243,10 +224,7 @@ export class Option<T = any> {
    *
    * @returns `[Some(a), Some(b)]` if `this` is `Some([a, b])`, otherwise `[None, None]`.
    */
-  public unzip(): [
-    Option<T extends any[] ? T[0] : unknown>,
-    Option<T extends any[] ? T[1] : unknown>,
-  ] {
+  public unzip(): [Option<T extends any[] ? T[0] : unknown>, Option<T extends any[] ? T[1] : unknown>] {
     return this.isSome() && Array.isArray(this._value)
       ? [Option.Some(this._value[0]), Option.Some(this._value[1])]
       : [Option.None, Option.None];
@@ -269,10 +247,7 @@ export class Option<T = any> {
    * @param predicate - A type predicate function that defines type guard by returning `true` or `false`.
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
-  public filter<U extends T>(
-    predicate: (value: T) => value is U,
-    thisArg?: any
-  ): Option<U>;
+  public filter<U extends T>(predicate: (value: T) => value is U, thisArg?: any): Option<U>;
   /**
    * Returns `None` if the `Option` is `None`, otherwise calls predicate with the wrapped value and returns:
    * - `Some(t)` if predicate returns `true` (where `t` is the wrapped value), and
@@ -283,9 +258,7 @@ export class Option<T = any> {
    */
   public filter(predicate: (value: T) => boolean, thisArg?: any): Option<T>;
   public filter(predicate: (value: T) => boolean, thisArg?: any): Option<T> {
-    return this.isSome() && predicate.call(thisArg, this._value)
-      ? this
-      : Option.None;
+    return this.isSome() && predicate.call(thisArg, this._value) ? this : Option.None;
   }
 
   /**
@@ -296,9 +269,7 @@ export class Option<T = any> {
    * @returns `None` if the `Option` is `None`, otherwise returns `Some(fn(value))`.
    */
   public map<U>(fn: (value: T) => U, thisArg?: any): Option<U> {
-    return this.isSome()
-      ? Option.Some(fn.call(thisArg, this._value))
-      : Option.None;
+    return this.isSome() ? Option.Some(fn.call(thisArg, this._value)) : Option.None;
   }
 
   /**
@@ -334,9 +305,7 @@ export class Option<T = any> {
    * @param thisArg - If provided, it will be used as the this value for each invocation of predicate. If it is not provided, `undefined` is used instead.
    */
   public okOrElse<E>(error: () => E, thisArg?: any): Result<T, E> {
-    return this.isSome()
-      ? Result.Ok(this._value)
-      : Result.Err(error.call(thisArg));
+    return this.isSome() ? Result.Ok(this._value) : Result.Err(error.call(thisArg));
   }
 
   /**
