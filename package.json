@@ -71,7 +71,7 @@
     "@vitest/coverage-v8": "^4.0.18",
     "@wopjs/gzip-size": "^0.1.5",
     "commit-and-tag-version": "^12.7.1",
-    "tsdown": "^0.21.7",
+    "tsdown": "^0.22.1",
     "typedoc": "^0.28.18",
     "typescript": "^6.0.2",
     "vitest": "^4.0.6"
