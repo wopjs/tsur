@@ -67,7 +67,7 @@
   "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",
-    "@types/node": "^25.6.0",
+    "@types/node": "^26.0.1",
     "@vitest/coverage-v8": "^4.0.18",
     "@wopjs/gzip-size": "^0.1.5",
     "commit-and-tag-version": "^12.7.1",
