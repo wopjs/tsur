@@ -70,10 +70,10 @@
     "@types/node": "^26.0.1",
     "@vitest/coverage-v8": "^4.0.18",
     "@wopjs/gzip-size": "^0.1.5",
-    "commit-and-tag-version": "^12.7.1",
+    "commit-and-tag-version": "^13.1.2",
     "tsdown": "^0.22.1",
     "typedoc": "^0.28.18",
-    "typescript": "^6.0.2",
+    "typescript": "^7.0.2",
     "vitest": "^4.0.6"
   }
 }
