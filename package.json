@@ -73,7 +73,7 @@
     "commit-and-tag-version": "^13.1.2",
     "tsdown": "^0.22.1",
     "typedoc": "^0.28.18",
-    "typescript": "^7.0.2",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "vitest": "^4.0.6"
   }
 }
