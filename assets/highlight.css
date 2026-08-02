@@ -114,6 +114,7 @@
   color: var(--hl-9);
 }
 pre,
-code {
+code,
+math[display="block"] {
   background: var(--code-background);
 }

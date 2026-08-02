@@ -33,7 +33,6 @@ window.translations = {
   kind_4194304: "Reference",
   kind_8388608: "Document",
 };
-("use strict");
 (() => {
   var Ke = Object.create;
   var he = Object.defineProperty;
@@ -41,7 +40,13 @@ window.translations = {
   var Ze = Object.getOwnPropertyNames;
   var Xe = Object.getPrototypeOf,
     Ye = Object.prototype.hasOwnProperty;
-  var et = (t, e) => () => (e || t((e = { exports: {} }).exports, e), e.exports);
+  var et = (t, e) => () => {
+    try {
+      return e || t((e = { exports: {} }).exports, e), e.exports;
+    } catch (n) {
+      throw ((e = 0), n);
+    }
+  };
   var tt = (t, e, n, r) => {
     if ((e && typeof e == "object") || typeof e == "function")
       for (let i of Ze(e))
