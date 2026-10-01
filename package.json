@@ -68,12 +68,12 @@
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",
     "@types/node": "^26.0.1",
-    "@vitest/coverage-v8": "^4.0.18",
+    "@vitest/coverage-v8": "^5.0.2",
     "@wopjs/gzip-size": "^0.1.5",
     "commit-and-tag-version": "^13.1.2",
-    "tsdown": "^0.22.1",
+    "tsdown": "^0.23.0",
     "typedoc": "^0.28.18",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
-    "vitest": "^4.0.6"
+    "vitest": "^5.0.2"
   }
 }
