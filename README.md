@@ -83,7 +83,7 @@ const obj = {
 };
 
 const result = get(obj, "a")
-  .map(x => x.b)
+  .map((x) => x.b)
   .unwrapOr("default");
 ```
 
@@ -96,7 +96,7 @@ import { filterMap, Some, None } from "@wopjs/tsur";
 
 const arr = [1, 2, 3, 4, 5];
 
-const result = filterMap(arr, x => (x % 2 === 0 ? Some(x * 2) : None));
+const result = filterMap(arr, (x) => (x % 2 === 0 ? Some(x * 2) : None));
 
 console.log(result); // [4, 8]
 ```
@@ -108,7 +108,7 @@ import "@wopjs/tsur/patches/array";
 
 const arr = [1, 2, 3, 4, 5];
 
-const result = arr.filterMap(x => (x % 2 === 0 ? Some(x * 2) : None));
+const result = arr.filterMap((x) => (x % 2 === 0 ? Some(x * 2) : None));
 
 console.log(result); // [4, 8]
 ```
