@@ -42,7 +42,7 @@ window.translations = {
     Ye = Object.prototype.hasOwnProperty;
   var et = (t, e) => () => {
     try {
-      return e || t((e = { exports: {} }).exports, e), e.exports;
+      return (e || t((e = { exports: {} }).exports, e), e.exports);
     } catch (n) {
       throw ((e = 0), n);
     }
@@ -177,7 +177,7 @@ window.translations = {
           return this.str;
         }),
         (t.Token.prototype.update = function (e) {
-          return (this.str = e(this.str, this.metadata)), this;
+          return ((this.str = e(this.str, this.metadata)), this);
         }),
         (t.Token.prototype.clone = function (e) {
           return (
@@ -283,7 +283,7 @@ window.translations = {
         }),
         (t.Pipeline.prototype.toJSON = function () {
           return this._stack.map(function (e) {
-            return t.Pipeline.warnIfFunctionNotRegistered(e), e.label;
+            return (t.Pipeline.warnIfFunctionNotRegistered(e), e.label);
           });
         });
       (t.Vector = function (e) {
@@ -462,7 +462,7 @@ window.translations = {
         t.Pipeline.registerFunction(t.stemmer, "stemmer");
       (t.generateStopWordFilter = function (e) {
         var n = e.reduce(function (r, i) {
-          return (r[i] = i), r;
+          return ((r[i] = i), r);
         }, {});
         return function (r) {
           if (r && n[r.toString()] !== r.toString()) return r;
@@ -602,7 +602,7 @@ window.translations = {
         (t.TokenSet._nextId = 1),
         (t.TokenSet.fromArray = function (e) {
           for (var n = new t.TokenSet.Builder(), r = 0, i = e.length; r < i; r++) n.insert(e[r]);
-          return n.finish(), n.root;
+          return (n.finish(), n.root);
         }),
         (t.TokenSet.fromClause = function (e) {
           return "editDistance" in e
@@ -1126,7 +1126,7 @@ window.translations = {
               this
             );
           var r = n || {};
-          return (r.term = e.toString()), this.clause(r), this;
+          return ((r.term = e.toString()), this.clause(r), this);
         }),
         (t.QueryParseError = function (e, n, r) {
           (this.name = "QueryParseError"), (this.message = e), (this.start = n), (this.end = r);
@@ -1146,7 +1146,7 @@ window.translations = {
         (t.QueryLexer.prototype.sliceString = function () {
           for (var e = [], n = this.start, r = this.pos, i = 0; i < this.escapeCharPositions.length; i++)
             (r = this.escapeCharPositions[i]), e.push(this.str.slice(n, r)), (n = r + 1);
-          return e.push(this.str.slice(n, this.pos)), (this.escapeCharPositions.length = 0), e.join("");
+          return (e.push(this.str.slice(n, this.pos)), (this.escapeCharPositions.length = 0), e.join(""));
         }),
         (t.QueryLexer.prototype.emit = function (e) {
           this.lexemes.push({ type: e, str: this.sliceString(), start: this.start, end: this.pos }),
@@ -1158,7 +1158,7 @@ window.translations = {
         (t.QueryLexer.prototype.next = function () {
           if (this.pos >= this.length) return t.QueryLexer.EOS;
           var e = this.str.charAt(this.pos);
-          return (this.pos += 1), e;
+          return ((this.pos += 1), e);
         }),
         (t.QueryLexer.prototype.width = function () {
           return this.pos - this.start;
@@ -1185,17 +1185,17 @@ window.translations = {
         (t.QueryLexer.BOOST = "BOOST"),
         (t.QueryLexer.PRESENCE = "PRESENCE"),
         (t.QueryLexer.lexField = function (e) {
-          return e.backup(), e.emit(t.QueryLexer.FIELD), e.ignore(), t.QueryLexer.lexText;
+          return (e.backup(), e.emit(t.QueryLexer.FIELD), e.ignore(), t.QueryLexer.lexText);
         }),
         (t.QueryLexer.lexTerm = function (e) {
           if ((e.width() > 1 && (e.backup(), e.emit(t.QueryLexer.TERM)), e.ignore(), e.more()))
             return t.QueryLexer.lexText;
         }),
         (t.QueryLexer.lexEditDistance = function (e) {
-          return e.ignore(), e.acceptDigitRun(), e.emit(t.QueryLexer.EDIT_DISTANCE), t.QueryLexer.lexText;
+          return (e.ignore(), e.acceptDigitRun(), e.emit(t.QueryLexer.EDIT_DISTANCE), t.QueryLexer.lexText);
         }),
         (t.QueryLexer.lexBoost = function (e) {
-          return e.ignore(), e.acceptDigitRun(), e.emit(t.QueryLexer.BOOST), t.QueryLexer.lexText;
+          return (e.ignore(), e.acceptDigitRun(), e.emit(t.QueryLexer.BOOST), t.QueryLexer.lexText);
         }),
         (t.QueryLexer.lexEOS = function (e) {
           e.width() > 0 && e.emit(t.QueryLexer.TERM);
@@ -1210,10 +1210,10 @@ window.translations = {
               continue;
             }
             if (n == ":") return t.QueryLexer.lexField;
-            if (n == "~") return e.backup(), e.width() > 0 && e.emit(t.QueryLexer.TERM), t.QueryLexer.lexEditDistance;
-            if (n == "^") return e.backup(), e.width() > 0 && e.emit(t.QueryLexer.TERM), t.QueryLexer.lexBoost;
+            if (n == "~") return (e.backup(), e.width() > 0 && e.emit(t.QueryLexer.TERM), t.QueryLexer.lexEditDistance);
+            if (n == "^") return (e.backup(), e.width() > 0 && e.emit(t.QueryLexer.TERM), t.QueryLexer.lexBoost);
             if ((n == "+" && e.width() === 1) || (n == "-" && e.width() === 1))
-              return e.emit(t.QueryLexer.PRESENCE), t.QueryLexer.lexText;
+              return (e.emit(t.QueryLexer.PRESENCE), t.QueryLexer.lexText);
             if (n.match(t.QueryLexer.termSeparator)) return t.QueryLexer.lexTerm;
           }
         }),
@@ -1230,7 +1230,7 @@ window.translations = {
         }),
         (t.QueryParser.prototype.consumeLexeme = function () {
           var e = this.peekLexeme();
-          return (this.lexemeIdx += 1), e;
+          return ((this.lexemeIdx += 1), e);
         }),
         (t.QueryParser.prototype.nextClause = function () {
           var e = this.currentClause;
@@ -1249,7 +1249,7 @@ window.translations = {
               default:
                 var r = "expected either a field or a term, found " + n.type;
                 throw (
-                  (n.str.length >= 1 && (r += " with value '" + n.str + "'"), new t.QueryParseError(r, n.start, n.end))
+                  n.str.length >= 1 && (r += " with value '" + n.str + "'"), new t.QueryParseError(r, n.start, n.end)
                 );
             }
         }),
@@ -1318,15 +1318,15 @@ window.translations = {
             }
             switch (r.type) {
               case t.QueryLexer.TERM:
-                return e.nextClause(), t.QueryParser.parseTerm;
+                return (e.nextClause(), t.QueryParser.parseTerm);
               case t.QueryLexer.FIELD:
-                return e.nextClause(), t.QueryParser.parseField;
+                return (e.nextClause(), t.QueryParser.parseField);
               case t.QueryLexer.EDIT_DISTANCE:
                 return t.QueryParser.parseEditDistance;
               case t.QueryLexer.BOOST:
                 return t.QueryParser.parseBoost;
               case t.QueryLexer.PRESENCE:
-                return e.nextClause(), t.QueryParser.parsePresence;
+                return (e.nextClause(), t.QueryParser.parsePresence);
               default:
                 var i = "Unexpected lexeme type '" + r.type + "'";
                 throw new t.QueryParseError(i, r.start, r.end);
@@ -1349,15 +1349,15 @@ window.translations = {
             }
             switch (s.type) {
               case t.QueryLexer.TERM:
-                return e.nextClause(), t.QueryParser.parseTerm;
+                return (e.nextClause(), t.QueryParser.parseTerm);
               case t.QueryLexer.FIELD:
-                return e.nextClause(), t.QueryParser.parseField;
+                return (e.nextClause(), t.QueryParser.parseField);
               case t.QueryLexer.EDIT_DISTANCE:
                 return t.QueryParser.parseEditDistance;
               case t.QueryLexer.BOOST:
                 return t.QueryParser.parseBoost;
               case t.QueryLexer.PRESENCE:
-                return e.nextClause(), t.QueryParser.parsePresence;
+                return (e.nextClause(), t.QueryParser.parsePresence);
               default:
                 var i = "Unexpected lexeme type '" + s.type + "'";
                 throw new t.QueryParseError(i, s.start, s.end);
@@ -1380,15 +1380,15 @@ window.translations = {
             }
             switch (s.type) {
               case t.QueryLexer.TERM:
-                return e.nextClause(), t.QueryParser.parseTerm;
+                return (e.nextClause(), t.QueryParser.parseTerm);
               case t.QueryLexer.FIELD:
-                return e.nextClause(), t.QueryParser.parseField;
+                return (e.nextClause(), t.QueryParser.parseField);
               case t.QueryLexer.EDIT_DISTANCE:
                 return t.QueryParser.parseEditDistance;
               case t.QueryLexer.BOOST:
                 return t.QueryParser.parseBoost;
               case t.QueryLexer.PRESENCE:
-                return e.nextClause(), t.QueryParser.parsePresence;
+                return (e.nextClause(), t.QueryParser.parsePresence);
               default:
                 var i = "Unexpected lexeme type '" + s.type + "'";
                 throw new t.QueryParseError(i, s.start, s.end);
@@ -1845,7 +1845,7 @@ window.translations = {
       i.push(te(t.substring(s, o)), `<mark>${te(t.substring(o, o + r.length))}</mark>`),
         (s = o + r.length),
         (o = n.indexOf(r, s));
-    return i.push(te(t.substring(s))), i.join("");
+    return (i.push(te(t.substring(s))), i.join(""));
   }
   var lt = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#039;", '"': "&quot;" };
   function te(t) {
@@ -2141,7 +2141,7 @@ window.translations = {
         c && o.appendChild(c);
       }
     }
-    return r.delete(e), s;
+    return (r.delete(e), s);
   }
   function mt(t, e, n) {
     if (e === n) return !0;
